@@ -233,4 +233,7 @@ The following article covers a few tips and tricks that you may find useful when
 
 >https://xrdocs.io/programmability/tutorials/pyats-series-tips-and-tricks/
 
+# License
+
+This project is covered under the terms described in [Licence](LICENSE)
 

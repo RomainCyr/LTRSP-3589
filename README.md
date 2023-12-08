@@ -9,21 +9,59 @@ This lab is an introduction to the pyATS framework, and how to use it to automat
 - Intermediate Python knowledge (condition, loop, class, object concepts)
 - Basic knowledge of Cisco IOS XR CLI
 
-# Learning Objectives
+# Exercises
 
-Upon completion of this lab, you will be able to:
-- Understand **pyATS building blocks** (connect, execute a CLI command, get a structured output and print differences between two configurations);
-- Know how to build and run a **sanity check** with **AETest**;
-- Understand how to leverage pyATS and **AETest** to run a **feature validation** (ex: SR-TE policy);
-- Understand how you can scale with **EasyPy** to run multiple features validation.
+This lab is composed of three main sections that start introducing the pyATS framework and its main building blocks and slowly moves to more advanced capabilities:
+
+0. **Basic Interaction**: Connect to a device, execute a CLI command, get a structured output and print differences between two configurations
+1. **Sanity Check**: Build and run a sanity check with AETest that ensure the device is running the correct version and has the correct IGP configuration.
+2. **Feature Validation**: Leverage AEtest and Easypy to run SR-TE policy validation.
+
+Each section and exercise are meant to be solved in order as they build on top of each other. However, it is not required to fully finish an exercise to move to the next one. Solution examples are provided for each exercise.
+
+## Structure
+
+There is one folder per exercise. Each exercise folder contains a README, that describes the steps to complete, an `exercise` folder and a `solution_example` folder.
+The `exercise` folder contains the main Python script that need to be modified to complete the exercise. It may also contain other files that are required for the exercise (such as the testbed or a config snippet).
+The `solution_example` folder contains a proposition of solution for the exercise, it is surely not the only way to solve the exercise and it also may not be the best way to do it. It is only provided as an example on how the exercise can be done.
+
+Below is an example of an exercise folder structure:
+
+```
+0_connect/
+├─ exercise/
+│  ├─ 0_connect.py
+│  ├─ testbed.yaml
+├─ solution_example/
+│  ├─ 0_connect.py
+│  ├─ testbed.yaml
+├─ README.md
+```
+
+## Instructions
+Complete instructions can be found in the different exercise folders.
+
+0. [Basic Interaction](0_basic_interactions/) 
+    1. [Connect](0_basic_interactions/0_connect/): Connect to a device
+    2. [Execute Command](0_basic_interactions/1_execute_command/): Execute a CLI command on a device
+    3. [Structured output](0_basic_interactions/2_structured_output/): Parse a CLI command to a structured output
+    4. [Config Diff](0_basic_interactions/3_conf_diff/): Print the difference between two configuration sets
+1. [Sanity Check](1_sanity_checks/) 
+    1. [Check Version (static)](1_sanity_checks/0_aetest_check_version_static/): Build an AETest script to check the device version against a static variable
+    2. [Check Version (testbed)](1_sanity_checks/1_aetest_check_version_testbed/): Build an AETest script to check the device version against a variable in the testbed file
+    3. [Check version and IGP](1_sanity_checks/2_aetest_check_version_and_igp/): Build an AETest script to check the device version and IGP configuration
+2. [Feature Validation](2_feature_validation/) 
+    1. [SR-TE Policy](2_feature_validation/0_sr_policy/): Build an AETest script to validate a SR-TE policy
+    2. [Easypy](2_feature_validation/1_easypy/): Use EasyPy to run multiple AETest scripts: the sanity check and the SR-TE policy validation
+    3. [Bonus: SR-TE policy with Netconf ](2_feature_validation/2_sr_policy_netconf_bonus/): Build an AETest script to validate a SR-TE policy using only NETCONF
 
 # Lab 
 
 ## XRd
 
-The lab is based on the latest containerized Virtual XR Router from Cisco called **XRd**. XRd routers are production ready and can be used as SR-PCE, Route Reflector or Virtual PE.
+The lab is based on the latest containerized virtual IOS XR router from Cisco called **XRd**. XRd routers are production ready and can be used as SR-PCE, Route Reflector or Virtual PE.
 They are also very handy for testing and learning purposes in lab as they are light and can be deployed in a few seconds using Docker or other container platforms.
-XRd containers comes in two flavors:
+XRd containers come in two flavors:
 - Control Plane (with minimal forwarding plane functionality) which is used for signalling heavy applications like Route reflector, SR-PCE.
 - vRouter (Control plane and the Forwarding plane bundled) which is suggested for Provider Edge
 
@@ -98,58 +136,17 @@ At the time of writing, Python 3.10 was used.
 
 ## Libraries
 
-To install the required python packages, please run the command below:
+It is recommended to use a virtual environment to install the required libraries. You can find more information about installing pyats in a virtual environment here:
+
+>https://pubhub.devnetcloud.com/media/pyats-getting-started/docs/install/installpyATS.html
+
+To install the required Python packages, please run the command below:
 
 ```
 pip install -r requirements.txt
 ```
 
 Those required libraries include pyATS packages (Unicon, Genie, Easypy), its dependencies and others libraries that are used in the suggested solutions for the exercises. Other libraries may be used to solve the exercises.
-
-It is recommended to use a virtual environment to install the required libraries. You can find more information about installing pyats in a virtual environment here:
-
->https://pubhub.devnetcloud.com/media/pyats-getting-started/docs/install/installpyATS.html
-
-# Exercises
-
-This lab is composed of three main sections that starts introducing the pyATS framework and its main building block and slowly moves to more advanced capabilities:
-
-0. **Basic Interaction**: Connect to a device, execute a CLI command, get a structured output and print differences between two configurations
-1. **Sanity Check**: Build and run a sanity check with AETest that ensure the device is running the correct version and has the correct IGP configuration.
-2. **Feature Validation**: Leverage AEtest and Easypy to run SR-TE policy validation.
-
-Each section and exercise are meant to be solved in order as they build on top of each other. However, it is not required to fully finish an exercise to move to the next one. Solution examples are provided for each exercise.
-
-There is one folder per exercise. Each exercise folder contains a README, that describes the steps to complete, an `exercise` folder and a `solution_example` folder.
-The `exercise` folder contains the main python script that need to be modified to complete the exercise. It may also contain other files that are required for the exercise (such as the testbed or a config snippet).
-The `solution_example` folder contains a proposition of solution for the exercise, it surely is not the only way to solve the exercise and it also may not be the best way to do it. It is only provided as an example on how the exercise can be done.
-Below is an example of an exercise folder structure:
-
-```
-0_connect/
-├─ exercise/
-│  ├─ 0_connect.py
-│  ├─ testbed.yaml
-├─ solution_example/
-│  ├─ 0_connect.py
-│  ├─ testbed.yaml
-├─ README.md
-```
-Complete instructions can be found in the different exercise folders.
-
-0. [Basic Interaction](0_basic_interactions/) 
-    1. [Connect](0_basic_interactions/0_connect/): Connect to a device
-    2. [Execute Command](0_basic_interactions/1_execute_command/): Execute a CLI command on a device
-    3. [Structured output](0_basic_interactions/2_structured_output/): Parse a CLI command to a structured output
-    4. [Config Diff](0_basic_interactions/3_conf_diff/): Print the difference between two configuration sets
-1. [Sanity Check](1_sanity_checks/) 
-    1. [Check Version (static)](1_sanity_checks/0_aetest_check_version_static/): Build an AETest script to check the device version against a static variable
-    2. [Check Version (testbed)](1_sanity_checks/1_aetest_check_version_testbed/): Build an AETest script to check the device version against a variable in the testbed file
-    3. [Check version and IGP](1_sanity_checks/2_aetest_check_version_and_igp/): Build an AETest script to check the device version and IGP configuration
-2. [Feature Validation](2_feature_validation/) 
-    1. [SR-TE Policy](2_feature_validation/0_sr_policy/): Build an AETest script to validate a SR-TE policy
-    2. [Easypy](2_feature_validation/1_easypy/): Use EasyPy to run multiple AETest scripts: the sanity check and the SR-TE policy validation
-    3. [Bonus: SR-TE policy with Netconf ](2_feature_validation/2_sr_policy_netconf_bonus/): Build an AETest script to validate a SR-TE policy using only NETCONF
 
 # Logging
 
@@ -176,11 +173,11 @@ Using the `logging` module is recommended over using `print` statements as it pr
 PyATS provides a formatter and a handler for you to use that adhere to Cisco logging standards.  You can find more information about them in the documentation below:
 >https://pubhub.devnetcloud.com/media/pyats/docs/log/implementation.html
 
-For simplicity and ease of use, the pyATS ScreenHandler is used in all example.  This handler will print all log messages to the screen. 
+For simplicity and ease of use, the pyATS ScreenHandler is used in all examples.  This handler will print all log messages to the screen. 
 
 ### Utilities
 
-A few logging utilities are also provided to display banner and titles and limit the size a logging line. You can find more information about them in the documentation below:
+A few logging utilities are also provided to display banners and titles and limit the size a logging line. You can find more information about them in the documentation below:
 >https://pubhub.devnetcloud.com/media/pyats/docs/log/utilities.html
 
 ### Example
@@ -233,4 +230,6 @@ The following article covers a few tips and tricks that you may find useful when
 
 >https://xrdocs.io/programmability/tutorials/pyats-series-tips-and-tricks/
 
+# License
 
+This project is covered under the terms described in [Licence](LICENSE)

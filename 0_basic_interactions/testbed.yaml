@@ -1,0 +1,85 @@
+testbed:
+  credentials:
+    default:
+      username: cisco
+      password: cisco123
+
+devices:
+  xrd-1:
+    os: iosxr
+    type: router
+    connections:
+      cli:
+        ip: 172.40.0.101
+        protocol: ssh
+        arguments:
+          init_config_commands: []
+        port: 22
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+  xrd-2:
+    os: iosxr
+    type: router
+    connections:
+      cli:
+        ip: 172.40.0.102
+        port: 22
+        protocol: ssh
+        arguments:
+          init_config_commands: []
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+  xrd-3:
+    os: iosxr
+    type: router
+    connections:
+      cli:
+        ip: 172.40.0.103
+        port: 22
+        protocol: ssh
+        arguments:
+          init_config_commands: []
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+  xrd-4:
+    os: iosxr
+    type: router
+    connections:
+      cli:
+        ip: 172.40.0.104
+        port: 22
+        protocol: ssh
+        arguments:
+          init_config_commands: []
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+  xrd-source:
+    os: iosxr
+    type: router
+    connections:
+      cli:
+        ip: 172.40.0.201
+        port: 22
+        protocol: ssh
+        arguments:
+          init_config_commands: []
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+  xrd-dest:
+    os: iosxr
+    type: router
+    connections:
+      cli:
+        ip: 172.40.0.202
+        port: 22
+        protocol: ssh
+        arguments:
+          init_config_commands: []
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0

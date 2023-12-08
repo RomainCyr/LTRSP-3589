@@ -1,0 +1,91 @@
+services:
+  xrd-source:
+    image: ios-xr/xrd-control-plane:7.8.2
+    xr_startup_cfg: ./configs/xrd-source_startup.cfg
+    xr_interfaces:
+      - Gi0/0/0/0
+      - Mg0/RP0/CPU0/0
+    networks:
+      mgmt:
+        ipv4_address: 172.40.0.201
+  xrd-dest:
+    image: ios-xr/xrd-control-plane:7.8.2
+    xr_startup_cfg: ./configs/xrd-dest_startup.cfg
+    xr_interfaces:
+      - Gi0/0/0/0
+      - Mg0/RP0/CPU0/0
+    networks:
+      mgmt:
+        ipv4_address: 172.40.0.202
+  xrd-1:
+    image: ios-xr/xrd-control-plane:7.9.2
+    xr_startup_cfg: ./configs/xrd-1_startup.cfg
+    xr_interfaces:
+      - Gi0/0/0/0
+      - Gi0/0/0/1
+      - Gi0/0/0/2
+      - Gi0/0/0/3
+      - Mg0/RP0/CPU0/0
+    networks:
+      mgmt:
+        ipv4_address: 172.40.0.101
+  xrd-2:
+    image: ios-xr/xrd-control-plane:7.9.2
+    xr_startup_cfg: ./configs/xrd-2_startup.cfg
+    xr_interfaces:
+      - Gi0/0/0/0
+      - Gi0/0/0/1
+      - Gi0/0/0/2
+      - Gi0/0/0/3
+      - Mg0/RP0/CPU0/0
+    networks:
+      mgmt:
+        ipv4_address: 172.40.0.102
+  xrd-3:
+    image: ios-xr/xrd-control-plane:7.9.2
+    xr_startup_cfg: ./configs/xrd-3_startup.cfg
+    xr_interfaces:
+      - Gi0/0/0/0
+      - Gi0/0/0/1
+      - Gi0/0/0/2
+      - Gi0/0/0/3
+      - Mg0/RP0/CPU0/0
+    networks:
+      mgmt:
+        ipv4_address: 172.40.0.103
+  xrd-4:
+    image: ios-xr/xrd-control-plane:7.9.2
+    xr_startup_cfg: ./configs/xrd-4_startup.cfg
+    xr_interfaces:
+      - Gi0/0/0/0
+      - Gi0/0/0/1
+      - Gi0/0/0/2
+      - Gi0/0/0/3
+      - Mg0/RP0/CPU0/0
+    networks:
+      mgmt:
+        ipv4_address: 172.40.0.104
+
+xr_l2networks:
+  - ["xrd-1:Gi0/0/0/0", "xrd-4:Gi0/0/0/0"]
+  - ["xrd-1:Gi0/0/0/1", "xrd-4:Gi0/0/0/1"]
+  - ["xrd-1:Gi0/0/0/2", "xrd-2:Gi0/0/0/2"]
+  - ["xrd-1:Gi0/0/0/3", "xrd-source:Gi0/0/0/0"]
+  - ["xrd-2:Gi0/0/0/0", "xrd-3:Gi0/0/0/0"]
+  - ["xrd-2:Gi0/0/0/1", "xrd-3:Gi0/0/0/1"]
+  - ["xrd-2:Gi0/0/0/3", "xrd-dest:Gi0/0/0/0"]
+  - ["xrd-3:Gi0/0/0/2", "xrd-4:Gi0/0/0/2"]
+  - ["xrd-3:Gi0/0/0/3", "xrd-4:Gi0/0/0/3"]
+
+networks:
+  mgmt:
+    xr_interfaces:
+      - xrd-1:Mg0/RP0/CPU0/0
+      - xrd-2:Mg0/RP0/CPU0/0
+      - xrd-3:Mg0/RP0/CPU0/0
+      - xrd-4:Mg0/RP0/CPU0/0
+      - xrd-source:Mg0/RP0/CPU0/0
+      - xrd-dest:Mg0/RP0/CPU0/0
+    ipam:
+      config:
+        - subnet: 172.40.0.0/24

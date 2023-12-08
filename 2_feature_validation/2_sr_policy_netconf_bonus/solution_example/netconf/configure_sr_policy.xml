@@ -1,0 +1,51 @@
+<config>
+    <routing-policy xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-policy-repository-cfg">
+        <sets>
+            <extended-community-opaque-sets>
+                <extended-community-opaque-set>
+                    <set-name>LOW_DELAY</set-name>
+                    <rpl-extended-community-opaque-set>
+                        extcommunity-set opaque LOW_DELAY
+                         10
+                        end-set
+                    </rpl-extended-community-opaque-set>
+                </extended-community-opaque-set>
+            </extended-community-opaque-sets>
+        </sets>
+        <route-policies>
+            <route-policy>
+                <route-policy-name>IMPORT_A</route-policy-name>
+                <rpl-route-policy>
+                    route-policy IMPORT_A
+                     apply LOW_DELAY
+                    end-policy
+                </rpl-route-policy>
+            </route-policy>
+            <route-policy>
+                <route-policy-name>LOW_DELAY</route-policy-name>
+                <rpl-route-policy>
+                    route-policy LOW_DELAY
+                     if destination in (172.16.0.0/16 ge 24) then
+                      set extcommunity color LOW_DELAY
+                     endif
+                     pass
+                    end-policy
+                </rpl-route-policy>
+            </route-policy>
+        </route-policies>
+    </routing-policy>
+    <sr xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-segment-routing-ms-cfg">
+    <traffic-engineering xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-infra-xtc-agent-cfg">
+        <on-demand-colors>
+            <on-demand-color>
+                <color>10</color>
+                <on-demand-color-dyn-mpls>
+                    <on-demand-color-dyn-mpls-metric>
+                        <metric-type>latency</metric-type>
+                    </on-demand-color-dyn-mpls-metric>
+                </on-demand-color-dyn-mpls>
+            </on-demand-color>
+        </on-demand-colors>
+    </traffic-engineering>
+    </sr>
+</config>

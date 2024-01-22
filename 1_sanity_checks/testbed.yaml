@@ -1,0 +1,256 @@
+testbed:
+  credentials:
+    default:
+      username: cisco
+      password: cisco123
+
+devices:
+  xrd-1:
+    role: "PE"
+    os: iosxr
+    type: router
+    connections:
+      cli:
+        ip: 172.40.0.101
+        protocol: ssh
+        arguments:
+          init_config_commands: []
+        port: 22
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+    custom:
+      version: "7.9.2"
+  xrd-2:
+    role: "PE"
+    os: iosxr
+    type: router
+    connections:
+      cli:
+        ip: 172.40.0.102
+        port: 22
+        protocol: ssh
+        arguments:
+          init_config_commands: []
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+    custom:
+      version: "7.9.2"
+  xrd-3:
+    role: "P"
+    os: iosxr
+    type: router
+    connections:
+      cli:
+        ip: 172.40.0.103
+        port: 22
+        protocol: ssh
+        arguments:
+          init_config_commands: []
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+    custom:
+      version: "7.9.2"
+  xrd-4:
+    role: "P"
+    os: iosxr
+    type: router
+    connections:
+      cli:
+        ip: 172.40.0.104
+        port: 22
+        protocol: ssh
+        arguments:
+          init_config_commands: []
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+    custom:
+      version: "7.9.2"
+
+  xrd-source:
+    role: "CPE"
+    os: iosxr
+    type: router
+    connections:
+      cli:
+        ip: 172.40.0.201
+        port: 22
+        protocol: ssh
+        arguments:
+          init_config_commands: []
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+    custom:
+      version: "7.8.1"
+  xrd-dest:
+    role: "CPE"
+    os: iosxr
+    type: router
+    connections:
+      cli:
+        ip: 172.40.0.202
+        port: 22
+        protocol: ssh
+        arguments:
+          init_config_commands: []
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+    custom:
+      version: "7.8.2"
+
+topology:
+  xrd-source:
+    interfaces:
+      Loopback0:
+        type: loopback
+        ipv4: 192.168.10.1/24
+      Loopback1:
+        type: loopback
+        ipv4: 172.16.10.1/24
+      GigabitEthernet0/0/0/0:
+        link: xrd-1_to_xrd-source_1
+        ipv4: 10.0.1.1/31
+        type: ethernet
+  xrd-dest:
+    interfaces:
+      Loopback0:
+        type: loopback
+        ipv4: 192.168.20.1/24
+      Loopback1:
+        type: loopback
+        ipv4: 172.16.20.1/24
+      GigabitEthernet0/0/0/0:
+        link: xrd-2_to_xrd-dest_1
+        ipv4: 10.0.2.1/31
+        type: ethernet
+  xrd-1:
+    interfaces:
+      Loopback0:
+        ipv4: 10.10.10.10/32
+        type: loopback
+      GigabitEthernet0/0/0/0:
+        link: xrd-1_to_xrd-4_1
+        type: ethernet
+      GigabitEthernet0/0/0/1:
+        link: xrd-1_to_xrd-4_2
+        type: ethernet
+      GigabitEthernet0/0/0/2:
+        link: xrd-1_to_xrd-2_1
+        ipv4: 10.0.12.0/31
+        type: ethernet
+      GigabitEthernet0/0/0/3:
+        link: xrd-1_to_xrd-source_1
+        ipv4: 10.0.1.0/31
+        type: ethernet
+        custom:
+          vrf: A
+      Bundle-Ether14:
+        link: xrd-1_to_xrd-4_bundle
+        ipv4: 10.0.14.0/31
+        type: bundle
+        custom:
+          members:
+            - GigabitEthernet0/0/0/0
+            - GigabitEthernet0/0/0/1
+  xrd-2:
+    interfaces:
+      Loopback0:
+        ipv4: 10.10.10.2/32
+        type: loopback
+      GigabitEthernet0/0/0/0:
+        link: xrd-2_to_xrd-3_1
+        type: ethernet
+      GigabitEthernet0/0/0/1:
+        link: xrd-2_to_xrd-3_2
+        type: ethernet
+      GigabitEthernet0/0/0/2:
+        link: xrd-1_to_xrd-2_1
+        ipv4: 10.0.12.1/31
+        type: ethernet
+      GigabitEthernet0/0/0/3:
+        link: xrd-3_to_xrd-dest_1
+        ipv4: 10.0.2.0/31
+        type: ethernet
+        custom:
+          vrf: A
+      Bundle-Ether23:
+        link: xrd-2_to_xrd-3_bundle
+        ipv4: 10.0.23.0/31
+        type: bundle
+        custom:
+          members:
+            - GigabitEthernet0/0/0/0
+            - GigabitEthernet0/0/0/1
+
+  xrd-3:
+    interfaces:
+      Loopback0:
+        ipv4: 10.10.10.3/32
+        type: loopback
+      GigabitEthernet0/0/0/0:
+        link: xrd-2_to_xrd-3_1
+        type: ethernet
+      GigabitEthernet0/0/0/1:
+        link: xrd-2_to_xrd-3_2
+        type: ethernet
+      GigabitEthernet0/0/0/2:
+        link: xrd-3_to_xrd-4_1
+        type: ethernet
+      GigabitEthernet0/0/0/3:
+        link: xrd-3_to_xrd-4_2
+        type: ethernet
+      Bundle-Ether23:
+        link: xrd-2_to_xrd-3_bundle
+        ipv4: 10.0.23.1/31
+        type: bundle
+        custom:
+          members:
+            - GigabitEthernet0/0/0/0
+            - GigabitEthernet0/0/0/1
+      Bundle-Ether34:
+        link: xrd-3_to_xrd-4_bundle
+        ipv4: 10.0.34.0/31
+        type: bundle
+        custom:
+          members:
+            - GigabitEthernet0/0/0/2
+            - GigabitEthernet0/0/0/3
+
+  xrd-4:
+    interfaces:
+      Loopback0:
+        ipv4: 10.10.10.4/32
+        type: loopback
+      GigabitEthernet0/0/0/0:
+        link: xrd-1_to_xrd-4_1
+        type: ethernet
+      GigabitEthernet0/0/0/1:
+        link: xrd-1_to_xrd-4_2
+        type: ethernet
+      GigabitEthernet0/0/0/2:
+        link: xrd-3_to_xrd-4_1
+        type: ethernet
+      GigabitEthernet0/0/0/3:
+        link: xrd-3_to_xrd-4_2
+        type: ethernet
+      Bundle-Ether14:
+        link: xrd-1_to_xrd-4_bundle
+        ipv4: 10.0.14.1/31
+        type: bundle
+        custom:
+          members:
+            - GigabitEthernet0/0/0/0
+            - GigabitEthernet0/0/0/1
+      Bundle-Ether34:
+        link: xrd-3_to_xrd-4_bundle
+        ipv4: 10.0.34.1/31
+        type: bundle
+        custom:
+          members:
+            - GigabitEthernet0/0/0/2
+            - GigabitEthernet0/0/0/3

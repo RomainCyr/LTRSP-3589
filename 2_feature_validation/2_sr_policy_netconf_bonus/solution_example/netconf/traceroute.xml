@@ -1,0 +1,9 @@
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
+  <traceroute xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-traceroute-act">
+    <ipv4>
+      <destination>{destination}</destination>
+      <source>{source}</source>
+      <verbose>true</verbose>
+    </ipv4>
+  </traceroute>
+</rpc>

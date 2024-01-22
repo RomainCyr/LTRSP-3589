@@ -1,0 +1,2 @@
+pyats[full]==23.11
+xmltodict==0.13.0

@@ -1,0 +1,18 @@
+segment-routing
+ traffic-eng
+  on-demand color 10
+   dynamic
+    metric
+     type latency
+extcommunity-set opaque LOW_DELAY
+  10
+end-set
+route-policy LOW_DELAY
+  if destination in (172.16.0.0/16 ge 24) then
+    set extcommunity color LOW_DELAY
+  endif
+  pass
+end-policy
+route-policy IMPORT_A
+  apply LOW_DELAY
+end-policy

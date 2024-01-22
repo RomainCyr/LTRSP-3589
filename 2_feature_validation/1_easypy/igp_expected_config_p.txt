@@ -1,0 +1,9 @@
+router isis core
+ is-type level-2-only
+ net {net}
+ address-family ipv4 unicast
+  metric-style wide
+  advertise passive-only
+  mpls traffic-eng router-id Loopback0
+  router-id Loopback0
+  segment-routing mpls sr-prefer

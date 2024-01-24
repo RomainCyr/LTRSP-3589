@@ -18,7 +18,7 @@ def string_from_file(filename: str):
     with open(filename) as f:
         return f.read()
 
-def netconf_configure_with_lock(device: Device,target: str,config: str):
+def netconf_configure(device: Device,target: str,config: str):
     '''
     Configure a device using NETCONF and return the associated commit ID. The configuration is locked and then unlocked
     to ensure that the operation is atomic and that the commit ID is the one associated with the configuration change.
@@ -29,17 +29,22 @@ def netconf_configure_with_lock(device: Device,target: str,config: str):
     Returns:
         The commit ID associated with the configuration change - str
     '''
-    device.netconf.lock(target=target)
-    device.netconf.edit_config(
-            target=target,
-            config=config,
-        )
-    device.netconf.commit()
-    last_commit_id = device.netconf.get(("subtree", string_from_file("netconf/filter_last_commit_id.xml")))
-    last_commit_id = xmltodict.parse(last_commit_id.xml)
-    last_commit_id = last_commit_id["rpc-reply"]["data"]["config-manager"]["global"]["config-commit"]["last-commit-id"]["#text"]
-    device.netconf.unlock(target=target)
-    return last_commit_id
+    # Step 4 - Define a Lock context for the target configuration to ensure that the requests are atomic and that
+    # the commit ID associated with the configuration change is properly retrieved
+    with device.netconf.locked(target=target):
+        # Step 5 - Apply the configuration using the edit_config() method
+        device.netconf.edit_config(
+                target=target,
+                config=config,
+            )
+        # Step 6 - Commit the configuration
+        device.netconf.commit()
+        # Step 7 - Retrieve the last commit ID using the get() method
+        output = device.netconf.get(("subtree", string_from_file("netconf/filter_last_commit_id.xml")))
+        config_commit = xmltodict.parse(output.xml)
+        last_commit_id = config_commit["rpc-reply"]["data"]["config-manager"]["global"]["config-commit"]["last-commit-id"]
+        # Step 8 - Return the last commit ID
+        return last_commit_id
 
 
 def _verify_traceroute(device: Device,source: str,destination: str,expected: List[str]):
@@ -53,14 +58,14 @@ def _verify_traceroute(device: Device,source: str,destination: str,expected: Lis
     Returns:
          Assert that the traceroute output is equal to the expected path
     '''
-    traceroute = device.netconf.request(
+    output = device.netconf.request(
             string_from_file("netconf/traceroute.xml").format(destination=destination,source=source)
         )
-    traceroute = xmltodict.parse(traceroute)
-    traceroute = traceroute.get("rpc-reply",{}).get("traceroute-response",{}).get("ipv4",{}).get("hops",{}).get("hop",{})
+    traceroute = xmltodict.parse(output)
+    traceroute_hops = traceroute.get("rpc-reply",{}).get("traceroute-response",{}).get("ipv4",{}).get("hops",{}).get("hop",{})
     hops = []
 
-    for hop in traceroute:
+    for hop in traceroute_hops:
         if "hop-address" in hop:
             hops.append(hop["hop-address"])
         else:
@@ -100,29 +105,25 @@ class CommonSetup(aetest.CommonSetup):
 
 class ODNSRPolicyValidation(aetest.Testcase):
 
-    # Step 1 - Verify no SR policy is configured and forwarding path is as expected
-    # This section must pass for the rest of the script to continue.
-    # Step 1.0.0 - Check that no SR policy is configured on the device
-    # This test section should be executed for both xrd-1 and xrd-2
     @aetest.test
     @aetest.loop(device_name=["xrd-1", "xrd-2"])
     def check_no_policy(self, testbed, device_name):
-        # Step 1.0.1 - Retrieve the model Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-summary using Netconf
-        # Verify that the total-policy-count is 0
+        # Step 1 - Retrieve the model Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-summary using Netconf
         device = testbed.devices[device_name]
-        policy_summary = device.netconf.get(
+        output = device.netconf.get(
             (
                 "subtree",
                 string_from_file("netconf/filter_policy_summary.xml"),
             )
         )
-        policy_summary = xmltodict.parse(policy_summary.xml)
-        policy_summary = policy_summary["rpc-reply"]["data"]["xtc"]["policy-summary"]
-        if int(policy_summary["total-policy-count"]) != 0:
+        # Step 2 - Retrieve the total-policy-count from the retrieved data
+        policy_summary = xmltodict.parse(output.xml)
+        policy_count = policy_summary["rpc-reply"]["data"]["xtc"]["policy-summary"]["total-policy-count"]
+        # Step 3 - Fail the test if the total-policy-count is not 0
+        if int(policy_count) != 0:
             self.failed(f"Existing policy found on device {device.name}",goto=["cleanup"])
 
-    # Step 1.1.0 Loop the test section to have it executed for each pair of source and destination prefixes
-    # on both xrd-source and xrd-dest
+
     @aetest.test
     @aetest.loop(
         device_name=["xrd-source", "xrd-source", "xrd-dest", "xrd-dest"],
@@ -135,49 +136,39 @@ class ODNSRPolicyValidation(aetest.Testcase):
                   ]
     )
     def verify_traceroute_before(self, testbed, device_name, destination, source,expected):
-        # Step 1.1.1 - Execute 'traceroute' using the Cisco-IOS-XR-traceroute-act model
-        # and compare the path to the expected one
         device = testbed.devices[device_name]
         if not _verify_traceroute(device,source,destination,expected):
             self.failed(f"Unexpected traceroute from {source} source {destination} on {device.name}",goto=["cleanup"])
 
-    # Step 2 Configure the SR policy
-    # Step 2.0.0 - Loop the test section to have it executed on xrd-1 and xrd-2
     @aetest.test
     @aetest.loop(device_name=["xrd-1", "xrd-2"])
     def configure_sr_policy(self,testbed,device_name):
-        # Step 2.0.1 - Push the configuration of the SR policy using Netconf
-        # The configuration in XML format is provided in the file configure_sr_policy.xml
         device = testbed.devices[device_name]
         logger.info("Configuring SR Policy")
-        device.last_commit_id = netconf_configure_with_lock(
+        device.last_commit_id = netconf_configure(
             device=device,
             target="candidate",
             config=string_from_file("netconf/configure_sr_policy.xml"),
         )
 
-    # Step 2.1.0 - Wait for the SR policy to be installed
     @aetest.test
     def wait_sr_policy_installed(self):
         logger.info("Waiting 10 seconds for the SR policy to be installed")
         sleep(10)
 
-    # Step 2.2.0 - Loop the test section to have it executed on xrd-1 and xrd-2
-    # providing the expected policy name
+
     @aetest.test
     @aetest.loop(device_name=["xrd-1", "xrd-2"],
                  policy_name=["srte_c_10_ep_10.10.10.2", "srte_c_10_ep_10.10.10.1"])
     def verify_odn_policy(self,testbed,device_name,policy_name):
-        # Step 2.2.1 - Verify that the policy status is up using the model Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policies
         device = testbed.devices[device_name]
-        odn_policy = device.netconf.get(
+        output = device.netconf.get(
             (
                 "subtree",
                 string_from_file("netconf/filter_odn_policy.xml").format(policy_name=policy_name),
             )
         )
-        odn_policy = xmltodict.parse(odn_policy.xml)
-        odn_policy = odn_policy.get("rpc-reply",{}).get("data",{})
+        odn_policy = xmltodict.parse(output.xml).get("rpc-reply",{}).get("data",{})
         if not odn_policy:
             self.failed("ODN policy not found",goto=["cleanup"])
         else:
@@ -187,10 +178,6 @@ class ODNSRPolicyValidation(aetest.Testcase):
             else:
                 self.passed(f"ODN policy {policy_name} is operational")
 
-    # Step 3 - Verify the forwarding after the SR policy is installed
-    # Step 3.0 - Loop the test section to have it executed
-    # for both destination prefixes 192.168.20.1 and 172.16.20.1 on xrd-source
-    # and for both destination prefixes 192.168.10.1 and 172.16.10.1 on xrd-dest
     @aetest.test
     @aetest.loop(
         device_name=["xrd-source", "xrd-source", "xrd-dest", "xrd-dest"],
@@ -204,20 +191,13 @@ class ODNSRPolicyValidation(aetest.Testcase):
         ],
     )
     def verify_traceroute_after(self, testbed, device_name, destination, source,expected):
-        # Step 3.1 - Execute 'traceroute' using the Cisco-IOS-XR-traceroute-act model
-        # and compare the path to the expected one
         device = testbed.devices[device_name]
         if not _verify_traceroute(device,source,destination,expected):
             self.failed(f"Unexpected traceroute from {source} source {destination} on {device.name}")
 
-    # Step 4 - Clean configuration
-    # Step 4.0.0 - Loop the test section to have it executed on xrd-1 and xrd-2
     @aetest.cleanup
     @aetest.loop(device_name=["xrd-1", "xrd-2"])
     def rollback_configuration(self, testbed,device_name):
-        # Step 4.0.1 - Rollback the configuration if the configuration was applied before and using the last commit id
-        # The model Cisco-IOS-XR-cfgmgr-rollback-act can be used to rollback the configuration
-        # Skip this test section otherwise
         device = testbed.devices[device_name]
         if not getattr(device,"last_commit_id",None):
             self.skipped("No configuration to rollback")
@@ -227,7 +207,6 @@ class ODNSRPolicyValidation(aetest.Testcase):
 class CommonCleanup(aetest.CommonCleanup):
     @aetest.subsection
     def disconnect(self, testbed):
-        # Step 4.1 - Disconnect from devices using the testbed.disconnect() method
         logger.info(f"Disconnecting from devices")
         testbed.disconnect(
             testbed.devices["xrd-1"],

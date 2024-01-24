@@ -1,18 +1,17 @@
 # 0. AETest - Check version (static)
 
-In this exercise, the devices versions are collected and checked against an expected version. It reuses similar code as the previous exercises but this time 
-structured in a AEtest test script. The test script contains a CheckVersion testcase that verifies the devices are running the version 7.9.2.
+In this exercise, the devices versions are collected and checked against an expected version. It reuses similar code as the previous exercises but this time structured in a AEtest test script. The test script contains a `CheckVersion` testcase that verifies the devices are running the version `7.9.2`.
+
 The test script is composed of 3 main sections with a few steps in each of them and only the one in bold are to be completed, the rest of the code and the testscript structure is already provided.
 
-0. CommonSetup: Connect to the devices in the testbed.
-1. **CheckVersion: Verify the devices are running the version 7.9.2 using Genie to parse the `show version` output.**
+0. `CommonSetup`: Connect to the devices in the testbed.
+1. **`CheckVersion`: Verify the devices are running the version `7.9.2` using Genie to parse the `show version` output.**
    1. **Parse `show version` output.**
-   2. **Verify that the device version is 7.9.2.**
+   2. **Verify that the device version is `7.9.2`.**
    3. **Fail the test if the device is not running the right version.**
-2. CommonCleanup: Disconnect from the devices.
+2. `CommonCleanup`: Disconnect from the devices.
 
-The goal of this exercise and the following one is to gradually learn how AEtest is structured and what functionalities it provides. 
-However, one may want to have a look at some theoretical concepts that are covered in the [Aetest](#aetest) paragraph.
+The goal of this exercise and the following one is to gradually learn how AEtest is structured and what functionalities it provides. However, one may want to have a look at some theoretical concepts that are covered in the [Aetest](#aetest) paragraph.
 
 ## Output example
 
@@ -95,8 +94,9 @@ The files with the exercise are in the `exercise` folder. An example of solution
 
 ## AEtest Execution
 
-AEtest test script can be executed on its own or as part of an easypy job. The later will be cover in the next exercises.
-Below is how an AEtest script can be executed standalone. The `if __name__ == '__main__':` ensure that the script is executed only if it is called directly. It will not be executed if the script is imported as a module.
+AEtest test script can be executed on its own or as part of an Easypy job. The later will be cover in the next exercises.
+
+Below is how an AEtest script can be executed standalone. The `if __name__ == '__main__':` ensure that the script is executed only if it is called directly. It will not be executed if the script is imported as a module (for example, when used with Easypy).
 
 ```python
 import aetest
@@ -107,13 +107,13 @@ if __name__ == '__main__':
     aetest.main(testbed = testbed)
 ```
 
-When running the `aetest.main()` the different AEtest class present in the python script will be executed in the order they are defined in the script (except for `CommonSetup` and `CommonCleanup` which are always executed first and last respectively).
+When running the `aetest.main()` the different AEtest classes present in the python script will be executed in the order they are defined in the script (except for `CommonSetup` and `CommonCleanup` which are always executed first and last respectively).
+
 In each class, every decorated function with `@aetest.subsection` or `@aetest.test` will be executed in the order they are defined.
 
 ## Console Output
 
-When using AETest it is recommended to use the `logger.info()` method, it prints in the standard pyATS format. 
-For instance, in order to print the below output, you can use `logger.info('xrd-1 is connected')`.
+When using AETest it is recommended to use the `logger.info()` method. Using the `logging` module will print in the standard pyATS format. For instance, in order to print the below output, you can use  `logger.info('xrd-1 is connected')`.
 
 ```
 2023-10-21T11:05:40: %SCRIPT-INFO: xrd-1 is connected
@@ -123,42 +123,41 @@ For instance, in order to print the below output, you can use `logger.info('xrd-
 
 The exercise script already contains some code including some reused from the previous exercise. Missing code needs to be completed after the `# Step N` comments.
 
-The steps to be completed are in a `for` loop that iterates over the devices in the testbed.
+The steps to be completed are in a `for` loop that iterates over the `devices` in the `testbed`.
 
 ### Step 0 - Verify the version only if the device is connected
 
-In the `CommonSetup` section, a `for` loop is used to connect to the device. If the connection to one device fails the test script still continues in order to connect to the other devices and later verify their version.
-This behavior is done on purpose, and better ways will be covered in the next exercise.
+In the `CommonSetup` section, a `for` loop is used to connect to each `device`. If the connection to one device fails the test script still continues in order to connect to the other devices and verify their version.
 
-However, for this exercise, we must first check if the device is connected before its version is checked.
-Use an if statement and the `connected` attribute of the device object to ensure that the execution continues only if necessary.
+**This behavior is done on purpose, and better ways will be covered in the next exercise.**
+
+However, for this exercise, we must first check if the `device` is `connected` before we check its version. Use an `if` statement and the `connected` attribute of the `device` object to ensure that the execution continues only if the device is succesfully connected.
 
 ### Step 1 - Parse the `show version` output for the device and save it to a variable
 
-Use the Genie `parse()` to send the `show version` command to the `device` and parse the output. 
-Save the parsed `show version` output to a variable.
+Use the Genie `parse()` method on the `device` object to get the `show version` output and parse the output. Save the parsed `show version` output to a variable.
 
 ### Step 2 - Print device version to the console
 
-Using the `logger.info()` method print the device version to the console. 
+Using the `logger.info()` method to print the device version to the console.
+
 The device version is in the `software_version` key of the dictionary.
 
 ### Step 3 - Verify that the device version is 7.9.2
 
-Use a condition to check if the device is running IOS XR 7.9.2 (using an if statement).
-The expected version should be statically defined and all device will be compared against this version.
+Use a condition to check if the device is running IOS XR 7.9.2 (using an `if` statement). The expected version should be statically defined in your code and all device will be compared against this version. 
+
 Print a warning message to the console if the device is not running the right version using the `logger.warning()` method.
 
 *Note that xrd-source and xrd-destination are running IOS XR 7.8.2, on purpose. This should fail the testcase.*
 
-### Step 4 - Update the test_failed variable if the device is running the wrong version
+### Step 4 - Update the `test_failed` variable if the device is running the wrong version
 
-The `test_failed` variable is used to fail the testcase if one of the devices is running the wrong version.
-Again, this is not ideal and the next exercises will cover how to improve it.
+Set the `test_failed` variable to `True` when the device is running the wrong version.
 
-Set the test_failed variable to `True` when the device is running the wrong version.
+The `test_failed` variable will be used to fail the `testcase` if one of the devices is running the wrong version. Again, this is not ideal and the next exercises will cover how to improve it.
 
-# AEtest
+## AEtest
 
 AEtest (Automated Easy Testing) is a test framework specifically design for network testing where a python file is used as a test script.
 The architectural design of AEtest module drew inspiration from Python [unittest](https://docs.python.org/3.4/library/unittest.html) and [pytest](http://pytest.org/latest/) libraries which provide Python unit-testing infrastructure.
@@ -198,8 +197,8 @@ class SimpleTestcase(aetest.Testcase):
             interfaces = device.parse("show interfaces")
             for interface in interfaces:
                 check_crc(interface)
-                
-# CommonCleanup is always run as the last section in the script              
+              
+# CommonCleanup is always run as the last section in the script            
 class CommonCleanup(aetest.CommonCleanup):
     @aetest.subsection
     def disconnect_from_devices(self, testbed):

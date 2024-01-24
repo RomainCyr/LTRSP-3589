@@ -1,16 +1,18 @@
 # 1. AETest - Check version (testbed)
 
 This second exercise on AEtest is an improvement of the first one with the same goal. The devices versions are collected and checked against an expected version.
-This time, the expected version is not defined statically but retrieve in the testbed from the device custom data. 
-Moreover, instead of doing a loop in the testcase the `@aetest.loop` feature is used to have a test section per device.
-The test script is still composed of 3 main sections with a few steps in each of them and only the one in bold are to be completed, the rest of the code and the testscript structure is already provided.
+This time, the expected version is not defined statically in the code but retrieved in the `testbed` from the device custom data.
 
-0. CommonSetup: Connect to the devices in the testbed.
-1. **CheckVersion: Verify the devices are running the correct version using Genie to parse the `show version` output.**
+Moreover, instead of doing a `for` loop in the testcase we will use the `@aetest.loop` feature to run the `testcase` for each `device`.
+
+The test script is still composed of 3 main sections with a few steps in each of them. Only the one in bold are to be completed, the rest of the code and the testscript structure is already provided.
+
+0. `CommonSetup`: Connect to the devices in the testbed.
+1. **`CheckVersion`: Verify the devices are running the correct version using Genie to parse the `show version` output.**
    1. **Parse `show version` output.**
    2. **Verify that the device is running the version defined in the testbed.**
    3. **Pass or Fail the test depending on the device version.**
-2. CommonCleanup: Disconnect from the devices.
+2. `CommonCleanup`: Disconnect from the devices.
 
 ## Output example
 
@@ -90,11 +92,9 @@ The files with the exercise are in the `exercise` folder. An example of solution
 
 ## Testbed
 
-The testbed contains the definition of the devices in the lab and how to connect to them. The testbed is also a good 
-place to store any information related to the devices.
-For example, the expected version of the device is stored in the testbed. This way, if the version changes, the script 
-doesn't have to be updated and stays generic.
-Any information can be stored in the `custom` section.
+The `testbed` contains the definition of the devices in the lab and how to connect to them. The testbed is also a good place to store any information related to the devices.
+For example, the expected version of the device can be stored in the testbed. This way, if the version changes, the script doesn't have to be updated and stays generic.
+Any information can be stored in the `custom` section, such as the `version`.
 
 ```yaml
 xrd-1:
@@ -114,14 +114,12 @@ xrd-1:
 
 ## AEtest loops
 
-AEtest loops are a way to iterate a testcase or test section. It is a good way to avoid code duplication and it provides 
-better visibility to the test results in comparison with a `for` loop inside a test section. For example, a test section 
-can be looped for each device in the testbed.
+AEtest loops are a way to iterate a testcase or test section. It is a good way to avoid code duplication. It provides better visibility to the test results in comparison with a `for` loop inside a test section. For example, a test section
+can be looped for each `device` in the `testbed`.
 
-When a `for` loop is used in an `@aetest.test` to verify the version of the device, if the test section is failed 
-whenever a device is in a wrong version, any other remaining device would **not** be tested. 
-By using an `@aetest.loop`, as the test section can be run once for each device, if one test fails, 
-the others continue to run for the remaining devices.
+When a `for` loop is used in an `@aetest.test` to verify the version of the device, if the test section is failed when a device is running the wrong version, any other remaining device would **not** be tested.
+
+By using an `@aetest.loop`, as the test section can be run once for each device, if one test fails, the others continue to run for the remaining devices.
 
 The python code below is an example of a loop in a test section.
 
@@ -131,8 +129,8 @@ The python code below is an example of a loop in a test section.
     def loop_over_device(self,device_name):
         pass
 ```
-*Note that the variable used in the loop is passed as an argument of the test section and their name must match.
-In this example it is `device_name`*
+
+**Note that the variable used in the loop is passed as an argument of the test section and their name must match. In this example it is `device_name`.**
 
 Looping a section is also possible for subsection in `CommonSetup` and `CommonCleanup`.
 
@@ -153,21 +151,23 @@ The exercise script already contains some code including some reused from the pr
 
 ### Step 0 - Set the devices to loop over for the test section
 
-The test section called `check_version` should be looped for each device in the testbed.
-As this test section is looped over for each device, the logic inside comes down to testing the version for one device. 
+The test section called `check_version` should be looped for each `device` in the `testbed`.
+As this test section is looped over for each `device`, the logic inside comes down to testing the version for one device.
 The `device_name` variable should be passed as an argument to the test section.
 
-Use the `aetest.loop()` decorator to loop over **ALL devices** of the testbed. For simplicity, the devices list to loop 
+Use the `aetest.loop()` decorator to loop over **ALL devices** of the testbed. For simplicity, the devices list to loop
 over should be statically defined in the script with list of device name such as `["xrd-1","xrd-2","xrd-3"]`.
 There are others ways to do this dynamically, and it will be covered in the next exercises.
 
 ### Step 1 - Verify if the device is running its expected version
 
-Use a `if` statement to verify that the device is running its expected version. 
+Use a `if` statement to verify that the device is running its expected version.
 The device version is in the `software_version` key of the parsed output dictionary.
 
-The expected version is stored in the testbed, under the `custom` section. 
+The expected version is stored in the testbed, under the `custom` section.
 Any parameter stored in this section can be accessed via `device.custom.myparameter` (assuming the name is `myparameter`).
+
+In the below example, you can retrieve the value `red` by using `device.custom.color` (assuming `device` object correspond to the `xrd-1` device in the testbed).
 
 ```yaml
 xrd-1:
@@ -176,13 +176,12 @@ xrd-1:
     color: "red"
 ```
 
-In the above example, you can retrieve the value `red` by using `device.custom.color` (assuming `device` object correspond to the `xrd-1`device in the testbed).
 
 ### Step 2 - Fail the testcase if the device is running the wrong version
 
 If the device is not running its expected version, use the `self.failed()` method to fail the test and provide detail on why it has failed.
 
-Note that `xrd-source` expected version is set to 7.8.1, on purpose. This should return an error in your script.
+Note that `xrd-source` expected version is set to `7.8.1`, on purpose. The testcase should fail for `xrd-source` in your script.
 
 ### Step 3 - Pass the testcase if the device is running the correct version
 

@@ -1,6 +1,6 @@
 # 0. Connect to each device
 
-The first exercise focuses on connecting and disconnecting from each device in the testbed. 
+The first exercise focuses on connecting and disconnecting from each device in the testbed.
 The script contains 3 mains steps, only the bold ones are to be completed, the rest already is provided.
 
 0. **Load the testbed**.
@@ -39,18 +39,18 @@ It serves as an inventory of the network, it can be used to save information abo
 
 Below is a simple testbed file.
 
-``` yaml   
+```yaml
 testbed:
   name: lab     #Optional Testbed Name
   credentials:  # Default credentials used by every device in the testbed
-    default:             
+    default:           
         username: cisco
-        password: cisco    
+        password: cisco  
 devices:
-  RouterA:     
+  RouterA:   
     connections:
       cli:
-        arguments:                      
+        arguments:                    
             init_config_commands: [] # Disable default init config commands such as 'logging console disable'
         host: 192.168.1.10           # Device Connection Information
         protocol: ssh
@@ -61,17 +61,17 @@ The testbed file for the lab is already provided, you can have a look at it to s
 
 You can read more about the testbed file in the documentation below.
 
->https://pubhub.devnetcloud.com/media/pyats/docs/topology/index.html
+> https://pubhub.devnetcloud.com/media/pyats/docs/topology/index.html
 
 ## Steps to complete the exercise
 
 To get you started, the exercise script already contains some code, missing code needs to be completed after the `# Step N` comments.
 
-This disconnect part is already provided, it can be used as an example for the connection part and for reference on handling disconnection
+This `disconnect` part is already provided, it can be used as an example for the connection part and for reference on handling disconnection
 
 ### Step 0 - Load the testbed
 
-In this first step, we are going to load the testbed using the `load` function from the `genie.testbed` module. 
+In this first step, we are going to load the testbed using the `load` function from the `genie.testbed` module.
 The testbed file is located in the same folder as the python script.
 
 Below is an example on how to use load the testbed.
@@ -81,17 +81,15 @@ from genie.testbed import load
 testbed = load('testbed.yaml')
 ```
 
-
 ### Step 1 - Connect to all devices in the testbed
 
-Now we are going to connect to each device in the testbed (using a for loop). The testbed object contains a dictionary of devices.
-You can access the devices using the `devices` attribute of the testbed object. For example, the `xrd-1` device can be accessed using `testbed.devices['xrd-1']`.
+Now we are going to connect to each device in the testbed (using a `for` loop). The testbed object contains a dictionary of devices. You can access the devices using the `devices` attribute of the testbed object. For example, the `xrd-1 `device can be accessed using `testbed.devices['xrd-1']`.
 
 The testbed also provide an iterator to loop over the devices dictionary. You can use it as shown below:
 
 ```python
 for device in testbed:
-    print(device.name)
+    logger.info(f'Trying to connect on: {device.name}')
 ```
 
 To initiate the device connection use the `connect()` method. More information can be found here:
@@ -104,9 +102,9 @@ The below arguments avoid printing the full device log to `stdout` and sets the 
 device.connect(log_stdout=False, connection_timeout=10)
 ```
 
-Each `device` object has a `connected` attribute which returns `True` or `False`. Use it to know if you are successfully connected to the device.
+Each `device` object has a `connected` attribute (`device.connected`) which returns `True` or `False`. Each `device` object also has a `name` attribute (`device.name`) which returns the device name (as per the name in the testbed).
 
-Each `device` object also has a `name` attribute which returns the device name (as per the name in the testbed).
+Use the `connected` attribute of the `device` object to log in the terminal if you are successfully connected to the device.
 
 ### Bonus - Exception Handling
 

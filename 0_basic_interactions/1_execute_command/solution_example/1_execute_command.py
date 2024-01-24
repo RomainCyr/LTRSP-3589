@@ -15,6 +15,7 @@ for device in testbed:
         device.connect(log_stdout=False, connection_timeout=10)
     except ConnectionError as e:
         logger.warning(f'Failed to connect to {device.name}.')
+        continue
 
 
     # Step 0 - Send a `show version` command to each device and save it to a variable

@@ -39,11 +39,13 @@ The exercise script already contains some code including some reused from the pr
 
 Use the `parse()` method on each `device` object to send the `show version` command to the `device` and parse the output using pyATS libraries. Save the parsed `show version` output, and save it in a variable.
 
+Here, the `parse()` method will take one argument: a `str` which is the CLI command we want to send the device. 
+
 Documentation about `parse()` method can be found here:
 
 > https://pubhub.devnetcloud.com/media/genie-docs/docs/cookbooks/explore.html?highlight=parse#
 
-Available parsers can be found here:
+**Not all CLI commands have a Genie parser**. Available parsers can be found here:
 
 > https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/parsers
 

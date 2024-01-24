@@ -2,6 +2,7 @@ from genie.testbed import load
 import logging
 from unicon.core.errors import ConnectionError
 from pyats.log import ScreenHandler
+from pyats.log.utils import title
 
 logger = logging.getLogger(__name__)
 logger.addHandler(ScreenHandler())

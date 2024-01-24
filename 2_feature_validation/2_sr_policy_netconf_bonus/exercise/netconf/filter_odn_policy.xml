@@ -1,0 +1,8 @@
+<xtc xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-infra-xtc-agent-oper">
+    <policies>
+        <policy>
+            <policy-name>{policy_name}</policy-name>
+            <operational-up/>
+        </policy>
+    </policies>
+</xtc>

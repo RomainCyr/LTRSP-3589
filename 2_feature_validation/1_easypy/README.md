@@ -10,7 +10,7 @@ This exercise focuses on the Easypy job file and is composed of 4 steps that nee
 
 0. Use a loop to execute the **Sanity Checks** script on all devices of the testbed.
 1. Run the AETest script on each device.
-2. Exit the EasyPy job if any of the sanity check fails. 
+2. Exit the Easypy job if any of the sanity check fails. 
 3. Run the **SR Policy Validation** script.
 
 ## Output example
@@ -133,7 +133,7 @@ The files with the exercise are in the `exercise` folder. An example of solution
 
 ## Easypy Job File
 
-A job file allows the aggregation of multiple test scripts together and executed within the same runtime environment that will run your test script.
+A job file allows the aggregation of multiple test scripts together and executed within the same runtime environment.
 It can be used to run multiple test scripts in a row, or to run the same testscript multiple times with different parameters.
 
 In this exercise, a job file will be used to chain the execution of the **Sanity Check** script on all device and then the **SR Policy Validation** script.
@@ -156,7 +156,7 @@ Refer to the documentation below for more information.
 
 > https://pubhub.devnetcloud.com/media/pyats/docs/easypy/jobfile.html#run-api
 
-## Sanity check script modification
+## Sanity Checks script modification
 
 The `1_job.py` is used to launch the `1_sanity_checks.py` test script for each device. Therefore, the `1_sanity_checks.py` should not handle a list of device but only one.
 This is done because the `1_sanity_checks.py` script is only doing verification that are device specific. It concerns only one device at a time and does not need to look at multiples devices.
@@ -164,7 +164,7 @@ This is done because the `1_sanity_checks.py` script is only doing verification 
 When executing the test script standalone, the `testbed` argument was passed to the `aetest.main()` function, and it was available to all test sections as an argument. Running the test script with a job file, there will be no more `testbed` argument passed, but only a `device` argument.
 
 The `sanity_checks.py` script from previous exercises is reused but slightly modified to ensure that each test section 
-is made for handling only one device. The modified `1_sanity_checks.py` file is already provided in the `exercise` folder.
+is made for handling only one device. The modified `1_sanity_checks.py` file is already provided in the `exercise` folder. You may have a look at it and compare it with the previous `sanity_checks.py` script.
 
 ## Steps to complete the exercise
 
@@ -205,8 +205,8 @@ def main(runtime):
     else:
         logger.info("Testscript failed")
 ```
-If any of the sanity check on the devices fail, the `1_sr_policy.py` test script should not be run. The job should stop directly with a failure.
-After each sanity check is run, verify its result and if it failed the `main()` function should be exited with `return`.
+If any of the `sanity_checks.py` testscript fails for one device, the `1_sr_policy.py` test script should not be run. The job should stop directly with a failure.
+After each sanity checks execution, verify its result and if it failed the `main()` function should be exited with `return`.
 
 If you want to run this job file at this point refer to the [Step 4 - Run the Job](#step-4---run-the-job) 
 

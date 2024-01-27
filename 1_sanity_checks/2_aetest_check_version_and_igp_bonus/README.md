@@ -2,7 +2,7 @@
 
 This third exercise on AEtest is an improvement of the second one with an additional testcase: IGP configuration are
 compared against an expected one using the Genie `Diff` module.  
-Moreover, the '@aetest.loop' is defined dynamically based on the devices in the testbed.
+Moreover, the `@aetest.loop` is defined dynamically based on the devices in the testbed.
 The test script is composed of 4 main sections with a few steps in each of them and only the one in bold are to be 
 completed, the rest of the code and the testscript structure is already provided.
 
@@ -231,7 +231,7 @@ It can be removed with the following code that use python list comprehension on 
 
 ### Step 3 - Convert the ISIS config output to a `Config` object
 
-The configuration output need to be converted to a Genie Config object to be later compared with the expected isis configuration.
+The configuration output need to be converted to a Genie `Config` object to be later compared with the expected isis configuration.
 Convert the config output using the `Config()` class constructor and save it to a variable. 
 Then parse the config using the `config.tree()` method
 
@@ -254,7 +254,7 @@ Below is the example on how to generate the net address from the Loopback0 IP ad
 net = isis_net_from_ip("0",device.interfaces.Loopback0.ipv4.ip.compressed)
 ```
 
-Once the expected configuration has been generated, it must be converted to Genie Config object.
+Once the expected configuration has been generated, it must be converted to Genie `Config` object.
 
 For more information, refer to the documentation below.
 
@@ -264,7 +264,7 @@ For more information, refer to the documentation below.
 
 ### Step 5 - Compare the expected and the actual configuration using the Genie `Diff` utility
 
-Using the Genie `Diff` utility compare the two Genie Config objects created. 
+Using the Genie `Diff` utility compare the two Genie `Config` objects created. 
 Create a `Diff` object using the Genie `Diff()` class constructor and pass the two `Config` objects as arguments.
 Then use the `diff.findDiff()` method to get the differences between the two configurations.
 In order to compare only the global config, the interface sections must be ignored. To do so, use the `exclude` parameter of the `Diff` class constructor.
@@ -299,6 +299,8 @@ For more information, refer to the documentation below.
 ### Step 6 - Verify if any configuration differences are found
 
 Now that the config diff has been generated, check if there are any differences. To do so you can check the length of the `.diffs` attribute of a Diff object: `len(diff.diffs)`.
-The length is 0 if there are no differences.
-The `.diffs` attribute is a list of differences found between the two Genie Config objects. You can also log it to see the differences.
+If there are no difference, the length is 0.
+The `.diffs` attribute is a list of differences found between the two Genie `Config` objects. You can also log it to see the differences.
 If any difference is found, the test failed, use the `failed()` method to fail the test.
+
+*Note that for xrd-1 the wrong loopback 0 address was specified in the testbed. This is done on purpose to have the `check_igp_config` test section failed for this router.*

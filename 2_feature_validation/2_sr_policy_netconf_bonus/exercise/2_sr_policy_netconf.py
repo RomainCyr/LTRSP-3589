@@ -56,7 +56,7 @@ def _verify_traceroute(device: Device,source: str,destination: str,expected: Lis
     output = device.netconf.request(
             string_from_file("netconf/traceroute.xml").format(destination=destination,source=source)
         )
-    traceroute = xmltodict.parse(output)
+    traceroute = xmltodict.parse(output,xml_attribs=False)
     traceroute_hops = traceroute.get("rpc-reply",{}).get("traceroute-response",{}).get("ipv4",{}).get("hops",{}).get("hop",{})
     hops = []
 
@@ -155,7 +155,7 @@ class ODNSRPolicyValidation(aetest.Testcase):
                 string_from_file("netconf/filter_odn_policy.xml").format(policy_name=policy_name),
             )
         )
-        odn_policy = xmltodict.parse(output.xml).get("rpc-reply",{}).get("data",{})
+        odn_policy = xmltodict.parse(output.xml,xml_attribs=False).get("rpc-reply",{}).get("data",{})
         if not odn_policy:
             self.failed("ODN policy not found",goto=["cleanup"])
         else:
@@ -188,7 +188,7 @@ class ODNSRPolicyValidation(aetest.Testcase):
         device = testbed.devices[device_name]
         if not getattr(device,"last_commit_id",None):
             self.skipped("No configuration to rollback")
-        logger.info(f"Rolling back configuration")
+        logger.info(f"Rolling back configuration with commit ID {device.last_commit_id}")
         device.netconf.request(string_from_file("netconf/rollback.xml").format(commit_id=device.last_commit_id))
 
 class CommonCleanup(aetest.CommonCleanup):

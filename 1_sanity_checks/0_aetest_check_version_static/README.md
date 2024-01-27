@@ -1,6 +1,6 @@
 # 0. AETest - Check version (static)
 
-In this exercise, the devices versions are collected and checked against an expected version. It reuses similar code as the previous exercises but this time structured in a AEtest test script. The test script contains a `CheckVersion` testcase that verifies the devices are running the version `7.9.2`.
+In this exercise, the devices versions are collected and checked against an expected version. It reuses similar code as the previous exercises but this time structured in a AEtest test script. The test script contains a `CheckVersion` testcase that verifies that the devices are running the version `7.9.2`.
 
 The test script is composed of 3 main sections with a few steps in each of them and only the one in bold are to be completed, the rest of the code and the testscript structure is already provided.
 

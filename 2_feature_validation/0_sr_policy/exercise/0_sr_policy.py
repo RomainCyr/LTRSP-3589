@@ -89,7 +89,9 @@ class ODNSRPolicyValidation(aetest.Testcase):
     def configure_sr_policy(self, testbed, device_name):
         pass
         # Step 1 - Open the SR policy configuration file and save its content to a variable
+
         # Step 2 - Configure the SR policy on the device
+
         # Step 3 - Mark the device for rollback
 
 

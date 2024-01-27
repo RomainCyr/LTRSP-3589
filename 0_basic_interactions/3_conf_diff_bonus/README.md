@@ -38,7 +38,7 @@ The files with the exercise are in the `exercise` folder. An example of solution
 
 ## Genie `Config` Object
 
-A Genie Config object convert a string `str` to a `dict` object. Below is an example of how to use it and the output of the parsed config.
+A Genie `Config` object convert a string `str` to a `dict` object. Below is an example of how to use it and the output of the parsed config.
 
 ```python
 import json
@@ -96,7 +96,7 @@ It can be removed with the following code that use python list comprehension on 
 
 ### Step 1 - Convert the BGP config output to a `Config` object
 
-Convert the config output which is a string `str` to a Config object using the Genie `Config()` class constructor.
+Convert the config output which is a string `str` to a `Config` object using the Genie `Config()` class constructor.
 Then parse the config using the `config.tree()` method.
 
 You can refer to the documentation below.
@@ -105,7 +105,7 @@ You can refer to the documentation below.
 
 ### Step 2 - Use the `Diff` module to print the differences between the two configurations
 
-Use the `Diff` module to get the differences between the two configurations. 
+Use the `Diff` module to find the differences between the two configurations. 
 Create a `Diff` object using the Genie `Diff()` class constructor and pass the two `Config` objects as arguments.
 Then use the `diff.findDiff()` method to get the differences between the two configurations.
 

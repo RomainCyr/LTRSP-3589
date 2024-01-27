@@ -122,7 +122,7 @@ When a test section fails, there are situation where the full testcase should be
 `goto` jumps can be invoked as optional arguments to **Result APIs**. A list of `goto` must be provided as there can be multiple `goto` target.
 There are four different `goto` targets available:
  - `cleanup`: jumps to the testcase cleanup section, by-passing all other test sections
- - `next_tc`:jumps to the next testcase in line 
+ - `next_tc`: jumps to the next testcase in line 
  - `common_cleanup`: jumps to the script’s CommonCleanup section. 
  - `exit`: terminates the testscript immediately without going further.
 	
@@ -170,7 +170,7 @@ The exercise script already contains some code including some reused from the pr
 
 ### Step 0 - Connect to each device using `testbed.connect()`
 
-In the `CommonSetup` section, connect only to the device that we will use in this testcase, that is **xrd-1**, **xrd-2**, **xrd-source** and **xrd-dest**.
+In the `CommonSetup` section, connect only to the devices that we will use in this testcase, that is **xrd-1**, **xrd-2**, **xrd-source** and **xrd-dest**.
 To connect simultaneously to multiple devices and without doing a `for` loop or `@aetest.loop()`,  you can use the `testbed.connect()` method as below.
 
 In this example, we would connect to two devices in the testbed: `uut` and `helper`. We would connect to `uut` and 
@@ -212,6 +212,10 @@ with open('myfile.txt') as file:
 Using the method `device.configure()` send the configuration of the `sr_policy_config.txt` file to the device.
 On XR a `commit` is required to confirm the configuration is installed on the device. With this `configure()` method the commit 
 is automatically sent at the end of the configuration.
+
+Here, the `configure()` method will take one argument: a multiline `str` which contains the configuration line required to instantiate the SR policy.
+
+*Note that only the `device_name` is provided as an argument of the test section. The device object must be retrieved from the testbed using the `testbed.devices` dictionary.*
 
 More information about the `device.configure()` method can be found in the below documentation.
 
@@ -268,7 +272,9 @@ Set the loop parameters so that the `verify_odn_policy` section is executed twic
 
 Use the command `show segment-routing traffic-eng policy name <policy_name>` to verify that the policy is installed.
 Unfortunately, there are no existing Genie parser available for this command, the `execute()` method should be used and  
-a simple verification will be done to verify that the policy is up.
+a simple verification will be done in the next step to verify that the policy is up.
+
+*Note that only the `device_name` is provided as an argument of the test section. The device object must be retrieved from the testbed using the `testbed.devices` dictionary.*
 
 ### Step 6 - Fail the testcase if the policy is not installed
 

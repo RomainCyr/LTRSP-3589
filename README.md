@@ -45,11 +45,11 @@ Complete instructions can be found in the different exercise folders.
     1. [Connect](0_basic_interactions/0_connect/): Connect to a device
     2. [Execute Command](0_basic_interactions/1_execute_command/): Execute a CLI command on a device
     3. [Structured output](0_basic_interactions/2_structured_output/): Parse a CLI command to a structured output
-    4. [Config Diff](0_basic_interactions/3_conf_diff/): Print the difference between two configuration sets
+    4. [Config Diff](0_basic_interactions/3_conf_diff_bonus/): Print the difference between two configuration sets
 1. [Sanity Check](1_sanity_checks/) 
     1. [Check Version (static)](1_sanity_checks/0_aetest_check_version_static/): Build an AETest script to check the device version against a static variable
     2. [Check Version (testbed)](1_sanity_checks/1_aetest_check_version_testbed/): Build an AETest script to check the device version against a variable in the testbed file
-    3. [Check version and IGP](1_sanity_checks/2_aetest_check_version_and_igp/): Build an AETest script to check the device version and IGP configuration
+    3. [Check version and IGP](1_sanity_checks/2_aetest_check_version_and_igp_bonus/): Build an AETest script to check the device version and IGP configuration
 2. [Feature Validation](2_feature_validation/) 
     1. [SR-TE Policy](2_feature_validation/0_sr_policy/): Build an AETest script to validate a SR-TE policy
     2. [Easypy](2_feature_validation/1_easypy/): Use EasyPy to run multiple AETest scripts: the sanity check and the SR-TE policy validation

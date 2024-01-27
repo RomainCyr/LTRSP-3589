@@ -10,13 +10,14 @@ logger.setLevel(logging.INFO)
 # Step 0 - Load the testbed
 testbed = load('testbed.yaml')
 
-# Step 1 - Connect to all devices in the testbed with a for loop and print a message once done
+# Step 1 - Connect to all devices in the testbed with a for loop
+# and print a message once done
 for device in testbed:
     logger.info(f'Trying to connect to {device.name}.')
     try:
         device.connect(log_stdout=False, connection_timeout=10)
         logger.info(f'Connected to {device.name}.')
-    except ConnectionError as e:
+    except ConnectionError:
         logger.warning(f'Failed to connect to {device.name}.')
 
 for device in testbed:

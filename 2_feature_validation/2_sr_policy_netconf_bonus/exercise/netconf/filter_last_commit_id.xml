@@ -4,4 +4,4 @@
         <last-commit-id xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-config-cfgmgr-exec-augmented-oper"/>
       </config-commit>
     </global>
-  </config-manager>
+</config-manager>

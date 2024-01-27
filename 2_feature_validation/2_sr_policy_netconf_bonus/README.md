@@ -3,14 +3,14 @@
 This bonus exercise is the same AEtest script for Segment Routing Policy Validation as the first exercise, but this time 
 using NETCONF to collect data and configure the devices.
 There were situation in the first exercise where no parser was available for a specific command, and we did very simple 
-checks on the raw output. While this is working, it is not ideal, and it may lead to issues when working on real life situation. 
+checks on the raw output. While this is working, it is not ideal, and it may lead to issues in real life situations. 
 Using NETCONF is one option as the output data is always structured following a YANG model. 
 It is also more consistent when it comes to configuration because it is less prone to errors.
 
 Note that there is no good or bad option between pyATS libraries (parsers) and pyATS NETCONF module. 
-As long as it works and you understand the pros and cons for each.
+As long as it works, and you understand the pros and cons for each.
 
-The same steps as the first exercise will be followed, only teh bold one are to be completed, the rest is already prodived.
+The same steps as the first exercise will be followed, only the bold one are to be completed, the rest is already provided.
 
 1. **Connect to the devices under test.**
 2. **Verify that no SR policy is configured**
@@ -151,7 +151,7 @@ The exercise script already contains some code including some reused from the pr
 
 ### Step 0 - Connect to each device using `testbed.connect()`
 
-In the `CommonSetup` section, connect only to the device that we will use in this testcase, that is **xrd-1**, **xrd-2**, **xrd-source** and **xrd-dest**.
+In the `CommonSetup` section, connect only to the devices that we will use in this testcase, that is **xrd-1**, **xrd-2**, **xrd-source** and **xrd-dest**.
 To connect simultaneously to multiple devices and without doing a `for` loop or `@aetest.loop()`,  you can use the `testbed.connect()` method as below.
 
 In this example, we would connect to two devices in the testbed: `uut` and `helper`. We would connect to `uut` and 
@@ -201,6 +201,8 @@ device.netconf.get(("subtree",xml_query))
 Use the netconf `get()` method to retrieve the Segment Routing policy summary, the xml query required is provided in the file `netconf/filter_policy_summary.xml`.
 Save the output of the `get()` method in a variable.
 
+*Note that only the `device_name` is provided as an argument of the test section. The device object must be retrieved from the testbed using the `testbed.devices` dictionary.*
+
 ### Step 2 - Access the total policy count attribute
 
 The model **Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-summary** provide the attribute `total-policy-count` as show below.
@@ -232,10 +234,12 @@ module: Cisco-IOS-XR-infra-xtc-agent-oper
 ```
 
 Use the `xmltodict` library to parse the xml output of the `get()` method and access the attribute `total-policy-count`.
-Below is an example on how to use the `xmltodict` library and access data in the parsed xml.
+Below is an example on how to use the `xmltodict` library and access data in the parsed xml. 
+
+*Note that the `xml_attribs` argument is set to `False` to avoid having a dictionary returned and not a string when attributes are present in the xml.*
 
 ```python
-interface_data = xmltodict.parse(output.xml)
+interface_data = xmltodict.parse(output.xml,xml_attribs=False)
 interface_status = interface_data["rpc-reply"]["data"]["interfaces"]["interface"]['state']["oper-status"]
 ```
 
@@ -247,6 +251,8 @@ Save the `total-policy-count` to a variable.
 Fail the testcase using the `self.failed()` method, if the `total-policy-count` is not 0. 
 The full testcase should be stopped as the initial conditions are not met. Use the `goto` argument of the `failed()` 
 method to do so, as no change was done to the testbed the goto target should be `next_tc`.
+
+*Note that the `total-policy-count` retrieved is a string, it must be converted to an integer before doing the comparison.*
 
 ### Step 4 - Define a Lock context for the target configuration to ensure that the requests are atomic
 
@@ -264,7 +270,7 @@ This is a context manager that allows for setup and cleanup actions to be taken 
 In our case the following code blocks are equivalent:
 
 ```python
-with device.netconf.lock(target="candidate"):
+with device.netconf.locked(target="candidate"):
     # do something
 
 # is equivalent to
@@ -340,6 +346,8 @@ Save the output of the `get()` method in a variable.
 Then, use the `xmltodict` library to parse the xml output and access the attribute `last-commit-id`.
 The path is `rpc-reply/data/config-manager/global/config/commit/last-commit-id`.
 Save the `last-commit-id` to a variable.
+
+*Note that the `xml_attribs` argument must be set to `False` to avoid having a dictionary returned and not a string when attributes are present in the xml.*
 
 ### Step 8 - Return the last commit ID
 

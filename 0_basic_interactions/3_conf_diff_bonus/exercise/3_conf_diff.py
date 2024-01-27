@@ -41,7 +41,7 @@ except ConnectionError as e:
 
 # Step 1 - Convert the running config output  to a `Config` object
 
-# Step 2 - Use the `Diff` module to print the differences between the two configurations
+# Step 2 - Use the `Diff` module to find the differences between the two configurations
 
 # Step 3 - Print the differences between the two configurations
 

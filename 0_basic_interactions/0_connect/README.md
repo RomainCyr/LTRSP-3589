@@ -41,7 +41,6 @@ Below is a simple testbed file.
 
 ```yaml
 testbed:
-  name: lab     #Optional Testbed Name
   credentials:  # Default credentials used by every device in the testbed
     default:           
         username: cisco
@@ -57,7 +56,7 @@ devices:
     os: iosxr                        # Device OS
 ```
 
-The testbed file for the lab is already provided, you can have a look at it to see how it looks like.
+The testbed file for the lab `testbed.yaml` is already provided, you can have a look at it to see how it looks like.
 
 You can read more about the testbed file in the documentation below.
 
@@ -103,8 +102,6 @@ device.connect(log_stdout=False, connection_timeout=10)
 ```
 
 Each `device` object has a `connected` attribute (`device.connected`) which returns `True` or `False`. Each `device` object also has a `name` attribute (`device.name`) which returns the device name (as per the name in the testbed).
-
-Use the `connected` attribute of the `device` object to log in the terminal if you are successfully connected to the device.
 
 ### Bonus - Exception Handling
 

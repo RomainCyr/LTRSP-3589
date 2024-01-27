@@ -78,7 +78,7 @@ If you use the `splitlines()`  method on a `str` object, it returns a list of th
 ['Thu Oct 26 14:12:37.263 UTC', 'Cisco IOS XR Software, Version 7.8.2 LNT', 'Copyright (c) 2013-2023 by Cisco Systems, Inc.', '', 'Build Information:', ' Built By     : ingunawa', ' Built On     : Wed Mar 15 16:45:19 UTC 2023', ' Build Host   : iox-lnx-100', ' Workspace    : /auto/srcarchive13/prod/7.8.2/xrd-control-plane/ws', ' Version      : 7.8.2', ' Label        : 7.8.2', '', 'cisco XRd Control Plane', 'cisco XRd-CP-C-01 processor with 28GB of memory', 'xrd-dest uptime is 6 hours, 23 minutes', 'XRd Control Plane Container']
 ```
 
-Depending how the parser is configured and what your CLI output looks like, the first element of the list might be an empty `str`.
+Depending on how the parser is configured and what your CLI output looks like, the first element of the list might be an empty `str`.
 
 ## Nicely printing a `title` output
 

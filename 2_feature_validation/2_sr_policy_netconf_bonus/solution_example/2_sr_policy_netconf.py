@@ -41,8 +41,8 @@ def netconf_configure(device: Device,target: str,config: str):
         device.netconf.commit()
         # Step 7 - Retrieve the last commit ID using the get() method
         output = device.netconf.get(("subtree", string_from_file("netconf/filter_last_commit_id.xml")))
-        config_commit = xmltodict.parse(output.xml)
-        last_commit_id = config_commit["rpc-reply"]["data"]["config-manager"]["global"]["config-commit"]["last-commit-id"]
+        config_commit = xmltodict.parse(output.xml,xml_attribs=False)
+        last_commit_id = str(config_commit["rpc-reply"]["data"]["config-manager"]["global"]["config-commit"]["last-commit-id"])
         # Step 8 - Return the last commit ID
         return last_commit_id
 
@@ -61,7 +61,7 @@ def _verify_traceroute(device: Device,source: str,destination: str,expected: Lis
     output = device.netconf.request(
             string_from_file("netconf/traceroute.xml").format(destination=destination,source=source)
         )
-    traceroute = xmltodict.parse(output)
+    traceroute = xmltodict.parse(output,xml_attribs=False)
     traceroute_hops = traceroute.get("rpc-reply",{}).get("traceroute-response",{}).get("ipv4",{}).get("hops",{}).get("hop",{})
     hops = []
 
@@ -117,7 +117,7 @@ class ODNSRPolicyValidation(aetest.Testcase):
             )
         )
         # Step 2 - Retrieve the total-policy-count from the retrieved data
-        policy_summary = xmltodict.parse(output.xml)
+        policy_summary = xmltodict.parse(output.xml,xml_attribs=False)
         policy_count = policy_summary["rpc-reply"]["data"]["xtc"]["policy-summary"]["total-policy-count"]
         # Step 3 - Fail the test if the total-policy-count is not 0
         if int(policy_count) != 0:
@@ -168,7 +168,7 @@ class ODNSRPolicyValidation(aetest.Testcase):
                 string_from_file("netconf/filter_odn_policy.xml").format(policy_name=policy_name),
             )
         )
-        odn_policy = xmltodict.parse(output.xml).get("rpc-reply",{}).get("data",{})
+        odn_policy = xmltodict.parse(output.xml,xml_attribs=False).get("rpc-reply",{}).get("data",{})
         if not odn_policy:
             self.failed("ODN policy not found",goto=["cleanup"])
         else:
@@ -201,7 +201,7 @@ class ODNSRPolicyValidation(aetest.Testcase):
         device = testbed.devices[device_name]
         if not getattr(device,"last_commit_id",None):
             self.skipped("No configuration to rollback")
-        logger.info(f"Rolling back configuration")
+        logger.info(f"Rolling back configuration with commit ID {device.last_commit_id}")
         device.netconf.request(string_from_file("netconf/rollback.xml").format(commit_id=device.last_commit_id))
 
 class CommonCleanup(aetest.CommonCleanup):

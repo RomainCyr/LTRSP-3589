@@ -45,7 +45,7 @@ output = output[output.index('\n'):]
 config = Config(output)
 config.tree()
 
-# Step 2 - Use the `Diff` module to print the differences between the two configurations
+# Step 2 - Use the `Diff` module to find the differences between the two configurations
 diff = Diff(expected_conf, config)
 diff.findDiff()
 

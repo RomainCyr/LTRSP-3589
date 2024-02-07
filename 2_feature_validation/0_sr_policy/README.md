@@ -215,7 +215,7 @@ is automatically sent at the end of the configuration.
 
 Here, the `configure()` method will take one argument: a multiline `str` which contains the configuration line required to instantiate the SR policy.
 
-*Note that only the `device_name` is provided as an argument of the test section. The device object must be retrieved from the testbed using the `testbed.devices` dictionary.*
+*Note that we are looping over two `device_name`: `xrd-1` and `xrd-2`. `device_name` is provided as an argument of the test section. In order to use `device.configure()` method, the device object must be retrieved from the testbed using the `testbed.devices` dictionary.*
 
 More information about the `device.configure()` method can be found in the below documentation.
 
@@ -271,14 +271,13 @@ Set the loop parameters so that the `verify_odn_policy` section is executed twic
 ### Step 5 - Execute the `show segment-routing traffic-eng policy name <policy_name>` command
 
 Use the command `show segment-routing traffic-eng policy name <policy_name>` to verify that the policy is installed.
-Unfortunately, there are no existing Genie parser available for this command, the `execute()` method should be used and  
-a simple verification will be done in the next step to verify that the policy is up.
+Unfortunately, there are no existing Genie parser available for this command, the `execute()` method should be used and a simple verification will be done in the next step to verify that the policy is up.
 
 *Note that only the `device_name` is provided as an argument of the test section. The device object must be retrieved from the testbed using the `testbed.devices` dictionary.*
 
 ### Step 6 - Fail the testcase if the policy is not installed
 
-The testcase should fail if the policy is not installed. This can be done by using the `self.failed()` method. 
+The testcase should fail if the policy is not installed. This can be done by using the `self.failed()` method. In this case, you should directly `goto` the `cleanup` section.
 
 Below is a sample output of `show segment-routing traffic-eng policy name srte_c_10_ep_10.10.10.2`.
 
@@ -321,9 +320,11 @@ Color: 10, End-point: 10.10.10.2
     Max Install Standby Candidate Paths: 0
 ```
 
-Checking that the policy is up can easily be done with the following python statement `"Admin: up  Operational: up" in output`
+Checking that the policy is up can easily be done with the following python statement `"Admin: up  Operational: up"` in the `output` you got from the `device.execute()` in the previous step. Fail the testcase if the policy is not `up`. 
 
-Fail the testcase if the policy is not up. If this test section fails, the execution should be stopped. 
-Indeed, the next test section become unnecessary as it would surely fail.  However, as configuration may have been
-pushed to the device, one must ensure that the cleanup section is executed.  Use the `goto` argument of the `failed()`
-method to do so, the `goto` target must be `cleanup`.
+If this test section fails, the execution should be stopped (there is no purpose to validate the forwarding without the policy). However, as configuration may have beenpushed to the device, one must ensure that the cleanup section is executed.  Use the `goto` argument of the `failed()`
+method. The `goto` target must be `cleanup`. Below is an example.
+
+```python
+self.failed('Test failed and I should go to cleanup!', goto=['cleanup'])
+```

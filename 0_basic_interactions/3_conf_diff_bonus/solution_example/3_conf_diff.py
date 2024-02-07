@@ -52,5 +52,6 @@ diff.findDiff()
 # Step 3 - Print the differences between the two configurations
 logger.info(diff)
 
+## Disconnecting from the device
 if xrd1.connected:
     xrd1.disconnect()

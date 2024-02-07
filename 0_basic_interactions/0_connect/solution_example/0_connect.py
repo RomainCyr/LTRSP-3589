@@ -20,6 +20,7 @@ for device in testbed:
     except ConnectionError:
         logger.warning(f'Failed to connect to {device.name}.')
 
+## Disconnecting from all devices in the testbed
 for device in testbed:
     if device.connected:
         logger.info(f'Trying to disconnect from {device.name}.')

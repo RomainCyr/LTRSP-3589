@@ -45,5 +45,6 @@ except ConnectionError as e:
 
 # Step 3 - Print the differences between the two configurations
 
+## Disconnecting from the device
 if xrd1.connected:
     xrd1.disconnect()

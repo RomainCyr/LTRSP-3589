@@ -23,6 +23,7 @@ for device in testbed:
     logger.info(title(device.name))
     logger.info(f"software_version = {output['software_version']}")
 
+## Disconnecting from all devices in the testbed
 for device in testbed:
     if device.connected:
         device.disconnect()

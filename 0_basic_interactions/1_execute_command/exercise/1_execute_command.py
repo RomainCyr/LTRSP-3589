@@ -20,7 +20,7 @@ for device in testbed:
 
     # Step 1 - Print only the line of the output containing the device version
 
-
+## Disconnecting from all devices in the testbed
 for device in testbed:
     if device.connected:
         device.disconnect()

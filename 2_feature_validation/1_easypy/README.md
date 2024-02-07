@@ -1,7 +1,7 @@
 # 1. Easypy: Automated Easy Testing
 
-This exercise aims to show how Easypy can be used to scale AEtest scripts. 
-Easypy is a framework that simplifies the execution of AEtest scripts and provides standardized runtime environment for 
+This exercise aims to show how Easypy can be used to scale AEtest scripts.
+Easypy is a framework that simplifies the execution of AEtest scripts and provides standardized runtime environment for
 test script execution.
 It provides additional features and functionality such as **built-in logging**, **result reporting**, and
 **error handling capabilities**. Easypy also offers the ability to easily **run tasks in parallel**.
@@ -10,7 +10,7 @@ This exercise focuses on the Easypy job file and is composed of 4 steps that nee
 
 0. Use a loop to execute the **Sanity Checks** script on all devices of the testbed.
 1. Run the AETest script on each device.
-2. Exit the Easypy job if any of the sanity check fails. 
+2. Exit the Easypy job if any of the sanity check fails.
 3. Run the **SR Policy Validation** script.
 
 ## Output example
@@ -138,7 +138,7 @@ It can be used to run multiple test scripts in a row, or to run the same testscr
 
 In this exercise, a job file will be used to chain the execution of the **Sanity Check** script on all device and then the **SR Policy Validation** script.
 
-A job file is run using the pyats command line. The job file is passed as an argument to the `pyats run job` command. 
+A job file is run using the pyats command line. The job file is passed as an argument to the `pyats run job` command.
 For example, to run the job file `1_job.py` with the testbed `testbed.yaml`, the following command is used `pyats run job 1_job.py --testbed testbed.yaml`.
 
 There are many other arguments available and even custom one can be created. Refer to the documentation below for more information.
@@ -163,19 +163,19 @@ This is done because the `1_sanity_checks.py` script is only doing verification 
 
 When executing the test script standalone, the `testbed` argument was passed to the `aetest.main()` function, and it was available to all test sections as an argument. Running the test script with a job file, there will be no more `testbed` argument passed, but only a `device` argument.
 
-The `sanity_checks.py` script from previous exercises is reused but slightly modified to ensure that each test section 
+The `sanity_checks.py` script from previous exercises is reused but slightly modified to ensure that each test section
 is made for handling only one device. The modified `1_sanity_checks.py` file is already provided in the `exercise` folder. You may have a look at it and compare it with the previous `sanity_checks.py` script.
 
 ## Steps to complete the exercise
 
 The exercise script already contains some code including some reused from the previous exercise. Missing code needs to be completed after the `# Step N` comments.
 
-### Step 0 - Use a for loop to run the sanity check test script on all devices of the testbed
+### Step 0 - Use a for loop to iterate over all devices of the testbed
 
-When the testbed file is provided as an argument of the pyats run job command, it is accessible from the runtime 
-argument with `runtime.testbed`. 
+When the testbed file is provided as an argument of the pyats run job command, it is accessible from the runtime
+argument with `runtime.testbed`.
 
-Use a `for` loop to iterate over all devices in the testbed.
+In the `1_job.py` file, use a `for` loop to iterate over all devices in the testbed.
 
 ### Step 1 - Run the AETest sanity_checks script on each device using the easypy run() method
 
@@ -188,14 +188,23 @@ def main(runtime):
     result = run("my_test_script.py", argument1 = "A", argument2 = "B")
 ```
 
-Any argument can be provided to the testscript, in this case the `device` argument must be provided `run("1_sanity_checks.py", device = device)`. It will be automatically passed to the test section functions of the AEtest script.
-For reporting purpose, the name of the task being run can be specified with the `taskid` parameter. For example: `run("1_sanity_checks.py",taskid=f"Sanity {device.name}", device=device)`
+Any argument can be provided to the testscript, in this case the `device` argument must be provided as it's required by the test sections in the `1_sanity_check.py` AEtest script. `device` argument will be automatically passed to each test section. Below is an example.
 
-If you want to run this job file at this point refer to the [Step 4 - Run the Job](#step-4---run-the-job) 
+ ```python
+ run("1_sanity_checks.py", device = device)
+ ```
+
+For reporting purpose, the name of the task being run can be specified with the `taskid` parameter. Below is an example.
+
+```python
+run("1_sanity_checks.py", taskid = f"Sanity {device.name}", device = device)
+```
+
+If you want to run this job file at this point refer to the [Step 4 - Run the Job](#step-4---run-the-job)
 
 ### Step 2 - Exit the job if any of the sanity check failed
 
-The `run()` method returns a `TestResult` object. It can be used as a boolean to check if the testscript passed or failed.
+The `run()` method returns a `TestResult` object. It can be used as a boolean to check if the testscript passed (`True`) or failed (`False`).
 
 ```python
 def main(runtime):
@@ -205,10 +214,11 @@ def main(runtime):
     else:
         logger.info("Testscript failed")
 ```
+
 If any of the `sanity_checks.py` testscript fails for one device, the `1_sr_policy.py` test script should not be run. The job should stop directly with a failure.
 After each sanity checks execution, verify its result and if it failed the `main()` function should be exited with `return`.
 
-If you want to run this job file at this point refer to the [Step 4 - Run the Job](#step-4---run-the-job) 
+If you want to run this job file at this point refer to the [Step 4 - Run the Job](#step-4---run-the-job)
 
 ### Step 3 - Run the SR Policy validation test script
 
@@ -229,6 +239,10 @@ For reporting purpose, the name of the task may be changed with the `taskid` par
 Using the pyats command line, run the job file. The testbed is passed as an argument with the `--testbed` argument `pyats run job 1_job.py --testbed testbed.yaml`.
 There are many other arguments that can be used with the pyats command line, use `pyats run job --help` to see them.
 
+### Step 5 - View the logs
+
+Using the pyATS command line, use `pyats logs view` to see the results.
+
 When the job has finished to run, a Task Result summary is printed. It shows the result of each task that was run and details the result of each test section.
 All the execution logs are available in the terminal but it may be rather long and hard to read.
 
@@ -241,18 +255,19 @@ Refer to the documentation below for more information.
 
 > https://pubhub.devnetcloud.com/media/pyats/docs/cli/pyats_logs.html
 
-### Bonus - Modify the job file to run the sanity check in parallel on all devices 
+### Bonus - Modify the job file to run the sanity check in parallel on all devices
 
-Modify the code of the `1_job.py` file to run the `1_sanity_checks.py` script in parallel on all devices. Indeed, all sanity checks can be executed independently of each other.
+Modify the code of the `1_job.py` file to run the `1_sanity_checks.py` script in parallel on all devices (feel free to create another python file). 
+
+All sanity checks can be executed independently of each other.
 This is one of the advanced capability of Easypy, it allows to run testscript asynchronously and with better control over each task.
 
 Instead of using the `run()` method, `Task` objects are created. An easypy `Task` is a subclass of a Python `multiprocessing.Process`.
-Using multiprocessing can be quite complex and may require advanced programming skills to deal with resources and data sharing between process. 
+Using multiprocessing can be quite complex and may require advanced programming skills to deal with resources and data sharing between process.
 For example, we would not advise to run multiple `1_sr_policy.py` test in parallel, as the configuration is being modified and then rollback.
 Nevertheless, when testscript are independent, like sanity checks, and do not rely on shared resources, it is safe to run them in parallel with an Easypy `Task`.
 
-
-To launch a testscript, a `Task` object must be first created. Instantiating a `Task` object does not create the actual child process, the child process, 
+To launch a testscript, a `Task` object must be first created. Instantiating a `Task` object does not create the actual child process, the child process,
 hence the script, is only launched when the method `start()` is called.
 This method `return` directly, it does not wait for the child process to finish. To wait for the child process to finish,
 the `wait()` method must be called. The `max_runtime` argument can be passed to specify a `timeout` to the task, so it does not run forever.
@@ -266,13 +281,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 def main(runtime):
-    tasks = []
+    my_tasks = []
     for i in range(5):
-        task = Task("test_script.py",taskid=f"Task {i}", index=i)
+        task = Task("test_script.py", taskid = f"Task {i}", index = i)
         task.start()
-        tasks.append(task)
+        my_tasks.append(task)
 
-    for task in tasks:
+    for task in my_tasks:
         task.wait()
         if not task.result:
             logger.warning(f"Task {task.index} failed")

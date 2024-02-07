@@ -18,7 +18,7 @@ def string_from_file(filename: str):
     with open(filename) as f:
         return f.read()
 
-def netconf_configure(device: Device,target: str,config: str):
+def netconf_configure(device: Device, target: str, config: str):
     '''
     Configure a device using NETCONF and return the associated commit ID. The configuration is locked and then unlocked
     to ensure that the operation is atomic and that the commit ID is the one associated with the configuration change.
@@ -59,17 +59,20 @@ def _verify_traceroute(device: Device,source: str,destination: str,expected: Lis
     traceroute = xmltodict.parse(output,xml_attribs=False)
     traceroute_hops = traceroute.get("rpc-reply",{}).get("traceroute-response",{}).get("ipv4",{}).get("hops",{}).get("hop",{})
     hops = []
-
-    for hop in traceroute_hops:
-        if "hop-address" in hop:
-            hops.append(hop["hop-address"])
-        else:
-            for probe in hop["probes"]["probe"]:
-                if "hop-address" in probe:
-                    hops.append(probe["hop-address"])
-                    break
+    try:
+        for hop in traceroute_hops:
+            if "hop-address" in hop:
+                hops.append(hop["hop-address"])
             else:
-                hops.append("*")
+                for probe in hop["probes"]["probe"]:
+                    if "hop-address" in probe:
+                        hops.append(probe["hop-address"])
+                        break
+                else:
+                    hops.append("*")
+    except Exception:
+        logger.warning(f"Unexpected traceroute format")
+        return False
 
     if hops != expected:
         logger.warning(f"Found difference in traceroute:\nExpected:{str(expected)}\nGot:{str(hops)}\n")
@@ -81,21 +84,7 @@ class CommonSetup(aetest.CommonSetup):
     def connect(self, testbed):
         # Step 0 - Connect to devices using the testbed.connect() method
         # The device should be connected using NETCONF
-        logger.info(f"Connecting to devices")
-        testbed.connect(
-            testbed.devices["xrd-1"],
-            testbed.devices["xrd-2"],
-            testbed.devices["xrd-source"],
-            testbed.devices["xrd-dest"],
-            vias={
-                "xrd-1": "netconf",
-                "xrd-2": "netconf",
-                "xrd-source": "netconf",
-                "xrd-dest": "netconf",
-            },
-            log_stdout=False,
-            connection_timeout=10,
-        )
+        pass
 
 
 class ODNSRPolicyValidation(aetest.Testcase):
@@ -125,7 +114,7 @@ class ODNSRPolicyValidation(aetest.Testcase):
     def verify_traceroute_before(self, testbed, device_name, destination, source,expected):
         device = testbed.devices[device_name]
         if not _verify_traceroute(device,source,destination,expected):
-            self.failed(f"Unexpected traceroute from {source} source {destination} on {device.name}",goto=["cleanup"])
+            self.failed(f"Unexpected traceroute from {source} source {destination} on {device.name}",goto=["next_tc"])
 
     @aetest.test
     @aetest.loop(device_name=["xrd-1", "xrd-2"])

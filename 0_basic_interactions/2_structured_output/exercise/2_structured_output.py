@@ -20,6 +20,7 @@ for device in testbed:
 
     # Step 1 - print only the value of 'software_version' key of the output dictionary
 
+## Disconnecting from all devices in the testbed
 for device in testbed:
     if device.connected:
         device.disconnect()

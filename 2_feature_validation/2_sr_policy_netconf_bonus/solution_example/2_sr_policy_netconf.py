@@ -31,7 +31,7 @@ def netconf_configure(device: Device,target: str,config: str):
     '''
     # Step 4 - Define a Lock context for the target configuration to ensure that the requests are atomic and that
     # the commit ID associated with the configuration change is properly retrieved
-    with device.netconf.locked(target=target):
+    with device.netconf.locked(target = target):
         # Step 5 - Apply the configuration using the edit_config() method
         device.netconf.edit_config(
                 target=target,
@@ -41,7 +41,7 @@ def netconf_configure(device: Device,target: str,config: str):
         device.netconf.commit()
         # Step 7 - Retrieve the last commit ID using the get() method
         output = device.netconf.get(("subtree", string_from_file("netconf/filter_last_commit_id.xml")))
-        config_commit = xmltodict.parse(output.xml,xml_attribs=False)
+        config_commit = xmltodict.parse(output.xml, xml_attribs=False)
         last_commit_id = str(config_commit["rpc-reply"]["data"]["config-manager"]["global"]["config-commit"]["last-commit-id"])
         # Step 8 - Return the last commit ID
         return last_commit_id
@@ -64,17 +64,20 @@ def _verify_traceroute(device: Device,source: str,destination: str,expected: Lis
     traceroute = xmltodict.parse(output,xml_attribs=False)
     traceroute_hops = traceroute.get("rpc-reply",{}).get("traceroute-response",{}).get("ipv4",{}).get("hops",{}).get("hop",{})
     hops = []
-
-    for hop in traceroute_hops:
-        if "hop-address" in hop:
-            hops.append(hop["hop-address"])
-        else:
-            for probe in hop["probes"]["probe"]:
-                if "hop-address" in probe:
-                    hops.append(probe["hop-address"])
-                    break
+    try:
+        for hop in traceroute_hops:
+            if "hop-address" in hop:
+                hops.append(hop["hop-address"])
             else:
-                hops.append("*")
+                for probe in hop["probes"]["probe"]:
+                    if "hop-address" in probe:
+                        hops.append(probe["hop-address"])
+                        break
+                else:
+                    hops.append("*")
+    except Exception:
+        logger.warning(f"Unexpected traceroute format")
+        return False
 
     if hops != expected:
         logger.warning(f"Found difference in traceroute:\nExpected:{str(expected)}\nGot:{str(hops)}\n")
@@ -121,7 +124,7 @@ class ODNSRPolicyValidation(aetest.Testcase):
         policy_count = policy_summary["rpc-reply"]["data"]["xtc"]["policy-summary"]["total-policy-count"]
         # Step 3 - Fail the test if the total-policy-count is not 0
         if int(policy_count) != 0:
-            self.failed(f"Existing policy found on device {device.name}",goto=["cleanup"])
+            self.failed(f"Existing policy found on device {device.name}",goto=["next_tc"])
 
 
     @aetest.test
@@ -138,7 +141,7 @@ class ODNSRPolicyValidation(aetest.Testcase):
     def verify_traceroute_before(self, testbed, device_name, destination, source,expected):
         device = testbed.devices[device_name]
         if not _verify_traceroute(device,source,destination,expected):
-            self.failed(f"Unexpected traceroute from {source} source {destination} on {device.name}",goto=["cleanup"])
+            self.failed(f"Unexpected traceroute from {source} source {destination} on {device.name}",goto=["next_tc"])
 
     @aetest.test
     @aetest.loop(device_name=["xrd-1", "xrd-2"])

@@ -4,8 +4,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 def main(runtime):
-    pass
-    # Step 0 - Use a for loop to run the sanity check test script on all devices
+    
+    # Step 0 - Use a for loop to iterate over all devices of the testbed
 
     # Step 1 - Run the AETest script on each device using the easypy run() method
 

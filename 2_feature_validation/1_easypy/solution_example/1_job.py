@@ -4,7 +4,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 def main(runtime):
-    # Step 0 - Use a for loop to run the sanity check test script on all devices
+    # Step 0 - Use a for loop to iterate over all devices of the testbed
     for device in runtime.testbed:
     # Step 1 - Run the AETest script on each device using the easypy run() method
         sanity_task = run("1_sanity_checks.py",taskid=f"Sanity {device.name}", device=device)

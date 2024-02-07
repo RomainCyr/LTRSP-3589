@@ -236,17 +236,21 @@ module: Cisco-IOS-XR-infra-xtc-agent-oper
 Use the `xmltodict` library to parse the xml output of the `get()` method and access the attribute `total-policy-count`.
 Below is an example on how to use the `xmltodict` library and access data in the parsed xml. 
 
+*Note that `output` is a `GetReply` object. `xmltodict.parse` takes a `xml` object. `output.xml` is used to send `output` as a `xml` object?*
+
 *Note that the `xml_attribs` argument is set to `False` to avoid having a dictionary returned and not a string when attributes are present in the xml.*
 
 ```python
-interface_data = xmltodict.parse(output.xml,xml_attribs=False)
+interface_data = xmltodict.parse(output.xml, xml_attribs=False)
 interface_status = interface_data["rpc-reply"]["data"]["interfaces"]["interface"]['state']["oper-status"]
 ```
 
 For the `total-policy-count` the path is `rpc-reply/data/xtc/policy-summary/total-policy-count`.
-Save the `total-policy-count` to a variable.
+Save the `total-policy-count` to a variable. 
 
 ### Step 3 - Fail the test if the policy count is not 0
+
+At this point, no policy should be installed.
 
 Fail the testcase using the `self.failed()` method, if the `total-policy-count` is not 0. 
 The full testcase should be stopped as the initial conditions are not met. Use the `goto` argument of the `failed()` 
@@ -257,25 +261,30 @@ method to do so, as no change was done to the testbed the goto target should be 
 ### Step 4 - Define a Lock context for the target configuration to ensure that the requests are atomic
 
 This next steps will require to configure the devices using NETCONF, it focuses on the `netconf_configure` function.
-This function is defined as followed: `def netconf_configure(device: Device,target: str,config: str):`.
+This function is defined as followed: `def netconf_configure(device: Device, target: str, config: str):`.
 
 When using NETCONF, the device configuration can be locked using the `device.netconf.lock()` method. 
 This method is used to ensure that the configuration is not modified by another process while we are configuring the device.
 
-This is done is this exercise because the last commit id need to be retrieved and atomicity is required to ensure that 
-the last commit id retrieved is indeed the one from the configuration done by the previous request.
+Here, we will:
+1. lock the configuration, 
+2. push our changes, 
+3. retrieve a IOS XR `commit id`,
+4. unlock the configuration.
 
-To ease the locking and unlocking of the configuration, the python `with` statement is used. 
+The IOS XR `commit id` will be later used to rollback to the configuration used just before this new configuration was pushed. If we do not lock the configuration, by the time we retrieve the IOS XR `commit id`, another configuration change could happen. In this case, using this IOS XR `commit id` would not rollback to the right operational state.
+
+To ease the locking and unlocking of the configuration, the python `with` statement is used. In this case, the `device.netconf.locked()` is used.
 This is a context manager that allows for setup and cleanup actions to be taken automatically.
 In our case the following code blocks are equivalent:
 
 ```python
-with device.netconf.locked(target="candidate"):
+with device.netconf.locked(target = "candidate"):
     # do something
 
 # is equivalent to
 
-device.netconf.lock(target="candidate")
+device.netconf.lock(target = "candidate")
 # do something
 device.netconf.unlock()
 ```
@@ -283,7 +292,7 @@ device.netconf.unlock()
 Use the `with` statement to create a context where the configuration of the device is locked, the target configuration 
 argument is provided as an argument of the `netconf_configure` function.
 
-#### Step 5 - Apply the configuration using the NETCONF `edit-config` method
+### Step 5 - Apply the configuration using the NETCONF `edit-config` method
 
 To configure a device using NETCONF use the `edit_config()` method. There are two arguments:
 - `target` - on which datastore to apply the config. On IOS XR, the candidate datastore must be used. 
@@ -344,7 +353,7 @@ Use the netconf `get()` method to retrieve config-commit data, the xml query req
 Save the output of the `get()` method in a variable.
 
 Then, use the `xmltodict` library to parse the xml output and access the attribute `last-commit-id`.
-The path is `rpc-reply/data/config-manager/global/config/commit/last-commit-id`.
+The path is `rpc-reply/data/config-manager/global/config-commit/last-commit-id`.
 Save the `last-commit-id` to a variable.
 
 *Note that the `xml_attribs` argument must be set to `False` to avoid having a dictionary returned and not a string when attributes are present in the xml.*

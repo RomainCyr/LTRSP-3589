@@ -17,7 +17,6 @@ for device in testbed:
         logger.warning(f'Failed to connect to {device.name}.')
         continue
 
-
     # Step 0 - Send a `show version` command to each device and save it to a variable
     output = device.execute('show version')
 
@@ -25,6 +24,7 @@ for device in testbed:
     logger.info(title(device.name))
     logger.info(output.splitlines()[2])
 
+## Disconnecting from all devices in the testbed
 for device in testbed:
     if device.connected:
         device.disconnect()

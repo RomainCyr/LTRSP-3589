@@ -105,7 +105,9 @@ Each `device` object has a `connected` attribute (`device.connected`) which retu
 
 ### Bonus - Exception Handling
 
-Note that if the `device.connect()` method fails, you will get a `unicon.core.errors.ConnectionError` exception like below. You can try to catch this error in case the `device.connect()` doesn't work.
+Note that if the `device.connect()` method fails, you will get a `unicon.core.errors.ConnectionError` exception like below. If this happens, the script will stop and you may not have try to connect to the all the devices.
+
+You can try to catch this error in case the `device.connect()` doesn't work and ensure that the script continues to run.
 
 ```
 The above exception was the direct cause of the following exception:

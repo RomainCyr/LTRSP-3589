@@ -27,7 +27,6 @@ def parse_traceroute(output: str) -> List[str]:
 
         Returns ["10.0.14.0","10.0.34.0","10.0.23.0"]
     '''
-
     hops = []
     for line in output.splitlines():
         if re.match(r"^\s*\d+\s+", line):

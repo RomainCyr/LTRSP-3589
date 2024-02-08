@@ -1,3 +1,5 @@
+Made with [Antoine Orsoni](https://github.com/AntoineOrsoni)
+
 # Introduction
 
 This repository contains the exercises for the Cisco Live Instructor Led Lab session **LTRSP-3589** — From Manual to NetOps: Accelerating IOS XR Feature Validation with Python & pyATS.

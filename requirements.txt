@@ -1,2 +1,2 @@
-pyats[full]==23.11
-xmltodict==0.13.0
+pyats[full]==24.11
+xmltodict==0.14.2

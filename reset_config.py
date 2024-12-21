@@ -8,9 +8,8 @@ import subprocess
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-
-
-CONFIG_PATH = f"{os.getcwd()}/xrd/configs/"
+filepath = os.path.dirname(os.path.realpath(__file__))
+CONFIG_PATH = f"{filepath}/xrd/configs/"
 
 def reset_config(device):
     logger.info(f"{device.name}: Connecting")

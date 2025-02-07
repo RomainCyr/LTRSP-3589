@@ -146,11 +146,11 @@ class ODNSRPolicyValidation(aetest.Testcase):
         )
         odn_policy = xmltodict.parse(output.xml,xml_attribs=False).get("rpc-reply",{}).get("data",{})
         if not odn_policy:
-            self.failed("ODN policy not found",goto=["cleanup"])
+            self.failed(f"ODN policy {policy_name} not found",goto=["cleanup"])
         else:
             status = odn_policy.get("xtc",{}).get("policies",{}).get("policy",{}).get("operational-up",None)
             if status != "1":
-                self.failed("ODN policy not operational",goto=["cleanup"])
+                self.failed(f"ODN policy {policy_name} not operational",goto=["cleanup"])
             else:
                 self.passed(f"ODN policy {policy_name} is operational")
 

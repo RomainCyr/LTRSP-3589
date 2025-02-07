@@ -37,7 +37,7 @@ except ConnectionError as e:
     logger.warning(f'Failed to connect to {xrd1.name}.')
     exit(1)
 
-# Step 0 - Collect the `show running config router bgp` and save it to a variable
+# Step 0 - Collect the `show running router bgp` and save it to a variable
 
 # Step 1 - Convert the running config output  to a `Config` object
 

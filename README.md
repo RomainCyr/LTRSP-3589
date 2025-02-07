@@ -135,7 +135,7 @@ You can find the list of supported Python versions for pyATS here:
 
 > https://pubhub.devnetcloud.com/media/pyats-getting-started/docs/prereqs/prerequisites.html
 
-At the time of writing, Python 3.10 was used.
+At the time of writing, Python 3.12 was used.
 
 ## Libraries
 

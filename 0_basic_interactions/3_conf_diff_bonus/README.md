@@ -3,7 +3,7 @@
 This exercise utilize the Genie `Diff` module to compare two BGP configurations. 
 The first configuration is the expected one, the second one is collected from **xrd-1**.
 It reuses some steps from the previous exercise such as loading the testbed and connecting to the device.
-The script is composed of 6 mains steps, only the bold ones are to be completed, the rest already is provided.
+The script is composed of 6 mains steps, only the bold ones are to be completed, the rest is already provided.
 
 0. Convert the expected config to a Genie `Config` object.
 1. Load the testbed and connect to `xrd-1`.

@@ -123,7 +123,7 @@ class ODNSRPolicyValidation(aetest.Testcase):
             f"show segment-routing traffic-eng policy name {policy_name}"
         )
         if not "Admin: up  Operational: up" in output:
-            self.failed(f"ODN policy not found on {device.name}",goto=["cleanup"])
+            self.failed(f"ODN policy {policy_name} not up on {device.name}",goto=["cleanup"])
 
     @aetest.test
     @aetest.loop(

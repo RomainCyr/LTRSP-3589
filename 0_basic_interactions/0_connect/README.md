@@ -1,7 +1,7 @@
 # 0. Connect to each device
 
 The first exercise focuses on connecting and disconnecting from each device in the testbed.
-The script contains 3 mains steps, only the bold ones are to be completed, the rest already is provided.
+The script contains 3 mains steps, only the bold ones are to be completed, the rest is already provided.
 
 0. **Load the testbed**.
 1. **Connect to all devices in the testbed**.
@@ -44,7 +44,7 @@ testbed:
   credentials:  # Default credentials used by every device in the testbed
     default:           
         username: cisco
-        password: cisco  
+        password: cisco123  
 devices:
   RouterA:   
     connections:
@@ -88,7 +88,7 @@ The testbed also provide an iterator to loop over the devices dictionary. You ca
 
 ```python
 for device in testbed:
-    logger.info(f'Trying to connect on: {device.name}')
+    logger.info(f'Trying to connect to {device.name}')
 ```
 
 To initiate the device connection use the `connect()` method. More information can be found here:

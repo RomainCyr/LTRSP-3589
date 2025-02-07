@@ -8,7 +8,7 @@ The test script is composed of 3 main sections with a few steps in each of them 
 1. **`CheckVersion`: Verify the devices are running the version `7.9.2` using Genie to parse the `show version` output.**
    1. **Parse `show version` output.**
    2. **Verify that the device version is `7.9.2`.**
-   3. **Fail the test if the device is not running the right version.**
+   3. **Fail the test if one device is not running the right version.**
 2. `CommonCleanup`: Disconnect from the devices.
 
 The goal of this exercise and the following one is to gradually learn how AEtest is structured and what functionalities it provides. However, one may want to have a look at some theoretical concepts that are covered in the [Aetest](#aetest) paragraph.
@@ -227,7 +227,7 @@ It's possible to manually provide section results by calling one of the `TestIte
 
 `TestItem.passx(reason, goto, from_exception, data)`
 
-Upon calling, the current section execution **terminates immediately** , returns and is set with the corresponding result. In other words, result apis can only be called **once** per script section, and all code immediately after it is not executed (similar to how `return`s statement works). More information in the documentation below.
+Upon calling, the current section execution **terminates immediately** , returns and is set with the corresponding result. In other words, result apis can only be called **once** per script section, and all code immediately after it is not executed (similar to how `return` statement works). More information in the documentation below.
 
 > https://pubhub.devnetcloud.com/media/pyats/docs/aetest/results.html#result-apis
 

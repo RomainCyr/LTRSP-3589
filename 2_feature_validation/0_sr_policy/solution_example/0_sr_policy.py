@@ -130,7 +130,7 @@ class ODNSRPolicyValidation(aetest.Testcase):
         )
         # Step 6 - Fail the testcase if the policy is not up and operational
         if not "Admin: up  Operational: up" in output:
-            self.failed(f"ODN policy not found on {device.name}",goto=["cleanup"])
+            self.failed(f"ODN policy {policy_name} not up on {device.name}",goto=["cleanup"])
 
     @aetest.test
     @aetest.loop(

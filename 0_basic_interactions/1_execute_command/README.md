@@ -1,7 +1,7 @@
 # 1. Execute command
 
 This exercise is about executing a command on a device. It reuses some steps from the previous exercise such as loading the testbed and connecting to the devices.
-The script is composed of 5 mains steps, only the bold ones are to be completed, the rest already is provided.
+The script is composed of 5 mains steps, only the bold ones are to be completed, the rest is already provided.
 
 0. Load the testbed.
 1. Connect to all devices in the testbed.

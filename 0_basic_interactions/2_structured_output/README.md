@@ -2,12 +2,12 @@
 
 In this exercise, a command will be executed on the devices and returned as a structured output. The device output is parsed by the Genie module.
 It reuses some steps from the previous exercise such as loading the testbed and connecting to the devices.
-The script is composed of 5 mains steps, only the bold ones are to be completed, the rest already is provided.
+The script is composed of 5 mains steps, only the bold ones are to be completed, the rest is already provided.
 
 0. Load the testbed.
 1. Connect to all devices in the testbed.
 2. **Use Genie to execute the `show version` command to the devices and parse it.**
-3. **Print only the device version**
+3. **Print only the device version.**
 4. Disconnect from the devices.
 
 ## Output example

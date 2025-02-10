@@ -208,7 +208,7 @@ The exercise script already contains some code including some reused from the pr
 
 ### Step 0 - Set the devices to loop over for IGP verification
 
-The `setup` test section is used to define dynamically the devices to loop over for the next test section `check_isis_config`.
+The `setup` test section is used to define dynamically the devices to loop over for the next test section `check_igp_config`.
 
 The ISIS configuration must be checked only for the **P** and **PE** routers in the topology.
 The role of each device is defined in the testbed and can be access with `device.role`.

@@ -218,8 +218,8 @@ Using a `for` loop over the devices in the testbed, save only the **P** and **PE
 
 ### Step 1 - Mark the `check_igp_config` test section to loop over the list of device to be checked
 
-The next test section called `check_isis_config` must be loop over only for the **P** and **PE** devices.
-Using the `aetest.loop.mark()` function and the device list previously defined mark the `check_isis_config` test section.
+The next test section called `check_igp_config` must be loop over only for the **P** and **PE** devices.
+Using the `aetest.loop.mark()` function and the device list previously defined mark the `check_igp_config` test section.
 
 *Note that the variable used to mark the loop is passed as an argument of the test section and their name must match.
 Here the expected argument is `device` and it must pass a `Device` object.*

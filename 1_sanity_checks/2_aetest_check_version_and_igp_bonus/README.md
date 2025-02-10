@@ -212,7 +212,7 @@ The `setup` test section is used to define dynamically the devices to loop over 
 
 The ISIS configuration must be checked only for the **P** and **PE** routers in the topology.
 The role of each device is defined in the testbed and can be access with `device.role`.
-The following statement is only true when device are a **P** or a **PE**: `device.role in ["PE","P"]`
+The following statement is only true when device are a **P** or a **PE**: `device.role in ["PE","P"]`. `xrd-dest` and `xrd-source` are **not** PE nor P role.
 
 Using a `for` loop over the devices in the testbed, save only the **P** and **PE** devices in a list.
 

@@ -48,7 +48,7 @@ More information about the `execute()` method here:
 
 For simplicity, you can start by printing the whole output of the `show version` command (remember to use `logger.info(output)`). You will see that the output is a `str` object.
 
-However, only a fraction of the output needs to be printed (see the secion **Output Example**, only the second line of the output is printed).
+However, only a fraction of the output needs to be printed (see the section **Output Example**, only the second line of the output is printed).
 
 If you use the `splitlines()`  method on a `str` object, it returns a list of the lines in the string, breaking at line boundaries. Example below.
 

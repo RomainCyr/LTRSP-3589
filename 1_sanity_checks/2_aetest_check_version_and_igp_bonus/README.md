@@ -208,18 +208,18 @@ The exercise script already contains some code including some reused from the pr
 
 ### Step 0 - Set the devices to loop over for IGP verification
 
-The `setup` test section is used to define dynamically the devices to loop over for the next test section `check_isis_config`.
+The `setup` test section is used to define dynamically the devices to loop over for the next test section `check_igp_config`.
 
 The ISIS configuration must be checked only for the **P** and **PE** routers in the topology.
 The role of each device is defined in the testbed and can be access with `device.role`.
-The following statement is only true when device are a **P** or a **PE**: `device.role in ["PE","P"]`
+The following statement is only true when device are a **P** or a **PE**: `device.role in ["PE","P"]`. `xrd-dest` and `xrd-source` are **not** PE nor P role.
 
 Using a `for` loop over the devices in the testbed, save only the **P** and **PE** devices in a list.
 
 ### Step 1 - Mark the `check_igp_config` test section to loop over the list of device to be checked
 
-The next test section called `check_isis_config` must be loop over only for the **P** and **PE** devices.
-Using the `aetest.loop.mark()` function and the device list previously defined mark the `check_isis_config` test section.
+The next test section called `check_igp_config` must be loop over only for the **P** and **PE** devices.
+Using the `aetest.loop.mark()` function and the device list previously defined mark the `check_igp_config` test section.
 
 *Note that the variable used to mark the loop is passed as an argument of the test section and their name must match.
 Here the expected argument is `device` and it must pass a `Device` object.*

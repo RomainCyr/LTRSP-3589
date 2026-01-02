@@ -1,13 +1,13 @@
 # 0. AETest - Check version (static)
 
-In this exercise, the devices versions are collected and checked against an expected version. It reuses similar code as the previous exercises but this time structured in a AEtest test script. The test script contains a `CheckVersion` testcase that verifies that the devices are running the version `7.9.2`.
+In this exercise, the devices versions are collected and checked against an expected version. It reuses similar code as the previous exercises but this time structured in a AEtest test script. The test script contains a `CheckVersion` testcase that verifies that the devices are running the version `24.4.2`.
 
 The test script is composed of 3 main sections with a few steps in each of them and only the one in bold are to be completed, the rest of the code and the testscript structure is already provided.
 
 0. `CommonSetup`: Connect to the devices in the testbed.
-1. **`CheckVersion`: Verify the devices are running the version `7.9.2` using Genie to parse the `show version` output.**
+1. **`CheckVersion`: Verify the devices are running the version `24.4.2` using Genie to parse the `show version` output.**
    1. **Parse `show version` output.**
-   2. **Verify that the device version is `7.9.2`.**
+   2. **Verify that the device version is `24.4.2`.**
    3. **Fail the test if one device is not running the right version.**
 2. `CommonCleanup`: Disconnect from the devices.
 
@@ -37,19 +37,19 @@ The goal of this exercise and the following one is to gradually learn how AEtest
 2024-01-19T18:17:06: %AETEST-INFO: |                    Starting section check_current_version                    |
 2024-01-19T18:17:06: %AETEST-INFO: +------------------------------------------------------------------------------+
 2024-01-19T18:17:08: %SCRIPT-INFO: =====================================xrd-1======================================
-2024-01-19T18:17:08: %SCRIPT-INFO: software_version = 7.9.2
+2024-01-19T18:17:08: %SCRIPT-INFO: software_version = 24.4.2
 2024-01-19T18:17:09: %SCRIPT-INFO: =====================================xrd-2======================================
-2024-01-19T18:17:09: %SCRIPT-INFO: software_version = 7.9.2
+2024-01-19T18:17:09: %SCRIPT-INFO: software_version = 24.4.2
 2024-01-19T18:17:09: %SCRIPT-INFO: =====================================xrd-3======================================
-2024-01-19T18:17:09: %SCRIPT-INFO: software_version = 7.9.2
+2024-01-19T18:17:09: %SCRIPT-INFO: software_version = 24.4.2
 2024-01-19T18:17:10: %SCRIPT-INFO: =====================================xrd-4======================================
-2024-01-19T18:17:10: %SCRIPT-INFO: software_version = 7.9.2
+2024-01-19T18:17:10: %SCRIPT-INFO: software_version = 24.4.2
 2024-01-19T18:17:10: %SCRIPT-INFO: ===================================xrd-source===================================
-2024-01-19T18:17:10: %SCRIPT-INFO: software_version = 7.8.2
-2024-01-19T18:17:10: %SCRIPT-WARNING: xrd-source is not running XR 7.9.2
+2024-01-19T18:17:10: %SCRIPT-INFO: software_version = 25.2.2
+2024-01-19T18:17:10: %SCRIPT-WARNING: xrd-source is not running XR 24.4.2
 2024-01-19T18:17:11: %SCRIPT-INFO: ====================================xrd-dest====================================
-2024-01-19T18:17:11: %SCRIPT-INFO: software_version = 7.8.2
-2024-01-19T18:17:11: %SCRIPT-WARNING: xrd-dest is not running XR 7.9.2
+2024-01-19T18:17:11: %SCRIPT-INFO: software_version = 25.2.2
+2024-01-19T18:17:11: %SCRIPT-WARNING: xrd-dest is not running XR 24.4.2
 2024-01-19T18:17:11: %AETEST-ERROR: Failed reason: Some devices are running the wrong version
 2024-01-19T18:17:11: %AETEST-INFO: The result of section check_current_version is => FAILED
 2024-01-19T18:17:11: %AETEST-INFO: The result of testcase CheckVersion is => FAILED
@@ -143,13 +143,13 @@ Using the `logger.info()` method to print the device version to the console.
 
 The device version is in the `software_version` key of the dictionary.
 
-### Step 3 - Verify that the device version is 7.9.2
+### Step 3 - Verify that the device version is 24.4.2
 
-Use a condition to check if the device is running IOS XR 7.9.2 (using an `if` statement). The expected version should be statically defined in your code and all device will be compared against this version. 
+Use a condition to check if the device is running IOS XR 24.4.2 (using an `if` statement). The expected version should be statically defined in your code and all device will be compared against this version. 
 
 Print a warning message to the console if the device is not running the right version using the `logger.warning()` method.
 
-*Note that xrd-source and xrd-destination are running IOS XR 7.8.2, on purpose. This should fail the testcase.*
+*Note that xrd-source and xrd-destination are running IOS XR 25.2.2, on purpose. This should fail the testcase.*
 
 ### Step 4 - Update the `test_failed` variable if the device is running the wrong version
 

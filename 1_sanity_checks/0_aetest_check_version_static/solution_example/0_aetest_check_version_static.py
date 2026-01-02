@@ -31,9 +31,9 @@ class CheckVersion(aetest.Testcase):
             # Step 2 - Print only the value of 'software_version' key of the output dictionary
                 logger.info(title(device.name))
                 logger.info(f"software_version = {device.version}")
-            # Step 3 - Verify the device is running IOS XR 7.9.2, print a warning if it is not the case
-                if device.version != '7.9.2':
-                    logger.warning(f'{device.name} is not running XR 7.9.2')
+            # Step 3 - Verify the device is running IOS XR 24.4.2, print a warning if it is not the case
+                if device.version != '24.4.2':
+                    logger.warning(f'{device.name} is not running XR 24.4.2')
             # Step 4 - Update test_failed variable if device is running the wrong version
                     test_failed = True
 

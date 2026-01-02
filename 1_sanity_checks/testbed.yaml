@@ -20,7 +20,7 @@ devices:
           GRACEFUL_DISCONNECT_WAIT_SEC: 0
           POST_DISCONNECT_WAIT_SEC: 0
     custom:
-      version: "7.9.2"
+      version: "24.4.2"
   xrd-2:
     role: "PE"
     os: iosxr
@@ -36,7 +36,7 @@ devices:
           GRACEFUL_DISCONNECT_WAIT_SEC: 0
           POST_DISCONNECT_WAIT_SEC: 0
     custom:
-      version: "7.9.2"
+      version: "24.4.2"
   xrd-3:
     role: "P"
     os: iosxr
@@ -52,7 +52,7 @@ devices:
           GRACEFUL_DISCONNECT_WAIT_SEC: 0
           POST_DISCONNECT_WAIT_SEC: 0
     custom:
-      version: "7.9.2"
+      version: "24.4.2"
   xrd-4:
     role: "P"
     os: iosxr
@@ -68,7 +68,7 @@ devices:
           GRACEFUL_DISCONNECT_WAIT_SEC: 0
           POST_DISCONNECT_WAIT_SEC: 0
     custom:
-      version: "7.9.2"
+      version: "24.4.2"
 
   xrd-source:
     role: "CPE"
@@ -85,7 +85,7 @@ devices:
           GRACEFUL_DISCONNECT_WAIT_SEC: 0
           POST_DISCONNECT_WAIT_SEC: 0
     custom:
-      version: "7.8.1"
+      version: "25.2.1"
   xrd-dest:
     role: "CPE"
     os: iosxr
@@ -101,7 +101,7 @@ devices:
           GRACEFUL_DISCONNECT_WAIT_SEC: 0
           POST_DISCONNECT_WAIT_SEC: 0
     custom:
-      version: "7.8.2"
+      version: "25.2.2"
 
 topology:
   xrd-source:

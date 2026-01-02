@@ -14,17 +14,17 @@ The script is composed of 5 mains steps, only the bold ones are to be completed,
 
 ```
 2024-01-21T20:36:54: %SCRIPT-INFO: =====================================xrd-1======================================
-2024-01-21T20:36:54: %SCRIPT-INFO: software_version = 7.9.2
+2024-01-21T20:36:54: %SCRIPT-INFO: software_version = 24.4.2
 2024-01-21T20:36:55: %SCRIPT-INFO: =====================================xrd-2======================================
-2024-01-21T20:36:55: %SCRIPT-INFO: software_version = 7.9.2
+2024-01-21T20:36:55: %SCRIPT-INFO: software_version = 24.4.2
 2024-01-21T20:36:57: %SCRIPT-INFO: =====================================xrd-3======================================
-2024-01-21T20:36:57: %SCRIPT-INFO: software_version = 7.9.2
+2024-01-21T20:36:57: %SCRIPT-INFO: software_version = 24.4.2
 2024-01-21T20:36:58: %SCRIPT-INFO: =====================================xrd-4======================================
-2024-01-21T20:36:58: %SCRIPT-INFO: software_version = 7.9.2
+2024-01-21T20:36:58: %SCRIPT-INFO: software_version = 24.4.2
 2024-01-21T20:37:00: %SCRIPT-INFO: ===================================xrd-source===================================
-2024-01-21T20:37:00: %SCRIPT-INFO: software_version = 7.8.2
+2024-01-21T20:37:00: %SCRIPT-INFO: software_version = 25.2.2
 2024-01-21T20:37:01: %SCRIPT-INFO: ====================================xrd-dest====================================
-2024-01-21T20:37:01: %SCRIPT-INFO: software_version = 7.8.2
+2024-01-21T20:37:01: %SCRIPT-INFO: software_version = 25.2.2
 ```
 
 ## Folders

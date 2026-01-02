@@ -29,7 +29,7 @@ class CheckVersion(aetest.Testcase):
 
             # Step 2 - Print only the value of 'software_version' key of the output dictionary
 
-            # Step 3 - Verify the device is running IOS XR 7.9.2, print a warning if it is not the case
+            # Step 3 - Verify the device is running IOS XR 24.4.2, print a warning if it is not the case
 
             # Step 4 - Update test_failed variable if device is running the wrong version
 

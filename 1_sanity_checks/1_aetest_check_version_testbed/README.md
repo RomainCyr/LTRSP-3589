@@ -39,12 +39,12 @@ Output has been truncated for brevity.
 2024-01-20T15:36:43: %AETEST-INFO: +------------------------------------------------------------------------------+
 2024-01-20T15:36:43: %AETEST-INFO: |              Starting section check_version[device_name=xrd-1]               |
 2024-01-20T15:36:43: %AETEST-INFO: +------------------------------------------------------------------------------+
-2024-01-20T15:36:46: %AETEST-INFO: Passed reason: xrd-1 is running the correct version: 7.9.2
+2024-01-20T15:36:46: %AETEST-INFO: Passed reason: xrd-1 is running the correct version: 24.4.2
 2024-01-20T15:36:46: %AETEST-INFO: The result of section check_version[device_name=xrd-1] is => PASSED
 2024-01-20T15:36:46: %AETEST-INFO: +------------------------------------------------------------------------------+
 2024-01-20T15:36:46: %AETEST-INFO: |              Starting section check_version[device_name=xrd-2]               |
 2024-01-20T15:36:46: %AETEST-INFO: +------------------------------------------------------------------------------+
-2024-01-20T15:36:46: %AETEST-INFO: Passed reason: xrd-2 is running the correct version: 7.9.2
+2024-01-20T15:36:46: %AETEST-INFO: Passed reason: xrd-2 is running the correct version: 24.4.2
 2024-01-20T15:36:46: %AETEST-INFO: The result of section check_version[device_name=xrd-2] is => PASSED
 [...]
 2024-01-20T15:36:48: %AETEST-INFO: |                           Starting common cleanup                            |
@@ -109,7 +109,7 @@ xrd-1:
           init_config_commands: []
         port: 22
     custom:
-      version: "7.9.2"
+      version: "24.4.2"
 ```
 
 ## AEtest loops
@@ -181,7 +181,7 @@ xrd-1:
 
 If the device is not running its expected version, use the `self.failed()` method to fail the test and provide detail on why it has failed.
 
-Note that `xrd-source` expected version is set to `7.8.1`, on purpose. The testcase should fail for `xrd-source` in your script.
+Note that `xrd-source` expected version is set to `24.4.1`, on purpose. The testcase should fail for `xrd-source` in your script.
 
 ### Step 3 - Pass the testcase if the device is running the correct version
 
